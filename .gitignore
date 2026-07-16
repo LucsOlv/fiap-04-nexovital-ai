@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Node / frontend
+node_modules/
+frontend/dist/
+*.local
+.eslintcache
+
+# Modelos (não versionar conteúdo pesado)
+*.pt
+*.onnx
+*.pth
+
+# Dados locais
+.localdata/
+backend/uploads/
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+Thumbs.db
+*.tsbuildinfo
+
+# Bicep build output
+*.json.bicep
+infra/**/*.compiled.json

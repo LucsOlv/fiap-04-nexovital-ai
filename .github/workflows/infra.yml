@@ -1,0 +1,17 @@
+name: Infra
+
+on:
+  push:
+    paths: ["infra/**", "scripts/**", ".github/workflows/infra.yml"]
+  pull_request:
+    paths: ["infra/**", "scripts/**", ".github/workflows/infra.yml"]
+
+jobs:
+  bicep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validar Bicep (sem deploy)
+        run: |
+          az bicep build --file infra/main.bicep --stdout > /dev/null
+          az bicep build-params --file infra/parameters/demo.bicepparam --stdout > /dev/null

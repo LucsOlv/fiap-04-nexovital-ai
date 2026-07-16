@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "medicamento": "Dipirona",
+      "dose": "500mg",
+      "frequencia": "6/6h"
+    },
+    {
+      "medicamento": "Paracetamol",
+      "dose": "750mg",
+      "frequencia": "8/8h",
+      "observacao": "se dor"
+    },
+    {
+      "medicamento": "Omeprazol",
+      "dose": "20mg",
+      "frequencia": "1x/dia"
+    }
+  ]
+}

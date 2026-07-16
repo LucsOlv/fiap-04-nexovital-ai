@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, sans-serif;
+  color-scheme: light;
+  --app-bg: #f4f7fb;
+  --app-surface: #ffffff;
+  --app-surface-muted: #eef3f8;
+  --app-border: #d7e0ea;
+  --app-text: #172033;
+  --app-text-muted: #667085;
+}
+
+:root.dark {
+  color-scheme: dark;
+  --app-bg: #0d1420;
+  --app-surface: #151f2d;
+  --app-surface-muted: #1b2939;
+  --app-border: #2d3b4e;
+  --app-text: #edf3fa;
+  --app-text-muted: #9eafc3;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    background: var(--app-bg);
+    color: var(--app-text);
+  }
+
+  * {
+    border-color: var(--app-border);
+  }
+
+  ::selection {
+    background: #1e6fd9;
+    color: white;
+  }
+}
+
+@layer utilities {
+  .app-surface { background: var(--app-surface); }
+  .app-surface-muted { background: var(--app-surface-muted); }
+  .app-border { border-color: var(--app-border); }
+  .app-text { color: var(--app-text); }
+  .app-text-muted { color: var(--app-text-muted); }
+}
+
+* {
+  scrollbar-color: #9aaabd transparent;
+}
+
+.dark * {
+  scrollbar-color: #43556b transparent;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #62a5f5;
+  outline-offset: 2px;
+}

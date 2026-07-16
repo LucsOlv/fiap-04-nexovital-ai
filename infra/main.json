@@ -1,0 +1,669 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "languageVersion": "2.0",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.44.1.10279",
+      "templateHash": "8122683663111360469"
+    }
+  },
+  "parameters": {
+    "projectName": {
+      "type": "string",
+      "defaultValue": "nexovital",
+      "metadata": {
+        "description": "Nome do projeto usado como prefixo dos recursos."
+      }
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "demo",
+      "allowedValues": [
+        "demo"
+      ],
+      "metadata": {
+        "description": "Ambiente único do MVP."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "eastus2",
+      "metadata": {
+        "description": "Região Azure para deploy."
+      }
+    },
+    "backendImage": {
+      "type": "string",
+      "metadata": {
+        "description": "URL completa da imagem Docker do backend no ACR."
+      }
+    },
+    "acrLoginServer": {
+      "type": "string",
+      "metadata": {
+        "description": "Servidor de login do ACR."
+      }
+    },
+    "acrUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Usuário admin do ACR."
+      }
+    },
+    "acrPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Senha admin do ACR."
+      }
+    },
+    "repoUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "URL do repositório GitHub do projeto."
+      }
+    },
+    "notificationEmail": {
+      "type": "string",
+      "metadata": {
+        "description": "Email para alerta de orçamento."
+      }
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "Tags extras opcionais."
+      }
+    }
+  },
+  "variables": {
+    "suffix": "[toLower(uniqueString(subscription().id, resourceGroup().id, parameters('projectName'), parameters('environment')))]",
+    "defaultTags": "[union(createObject('project', 'NexoVital AI', 'environment', parameters('environment'), 'managedBy', 'Bicep', 'repository', parameters('repoUrl')), parameters('tags'))]",
+    "staticWebAppName": "[format('{0}-{1}-swa-{2}', parameters('projectName'), parameters('environment'), variables('suffix'))]",
+    "managedEnvironmentName": "[format('{0}-{1}-cae', parameters('projectName'), parameters('environment'))]",
+    "backendAppName": "[format('{0}-{1}-backend', parameters('projectName'), parameters('environment'))]",
+    "speechName": "[take(format('{0}{1}speech{2}', parameters('projectName'), parameters('environment'), variables('suffix')), 63)]",
+    "languageName": "[take(format('{0}{1}language{2}', parameters('projectName'), parameters('environment'), variables('suffix')), 63)]",
+    "budgetName": "[format('{0}-{1}-budget', parameters('projectName'), parameters('environment'))]"
+  },
+  "resources": {
+    "cognitiveServices": {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "cognitive-services",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "speechName": {
+            "value": "[variables('speechName')]"
+          },
+          "languageName": {
+            "value": "[variables('languageName')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[variables('defaultTags')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "languageVersion": "2.0",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.44.1.10279",
+              "templateHash": "3665298566061930698"
+            }
+          },
+          "parameters": {
+            "speechName": {
+              "type": "string",
+              "metadata": {
+                "description": "Nome do recurso Azure Speech."
+              }
+            },
+            "languageName": {
+              "type": "string",
+              "metadata": {
+                "description": "Nome do recurso Azure AI Language."
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Região Azure."
+              }
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "Tags dos recursos."
+              }
+            }
+          },
+          "resources": {
+            "speech": {
+              "type": "Microsoft.CognitiveServices/accounts",
+              "apiVersion": "2023-05-01",
+              "name": "[parameters('speechName')]",
+              "location": "[parameters('location')]",
+              "kind": "SpeechServices",
+              "sku": {
+                "name": "F0"
+              },
+              "properties": {
+                "customSubDomainName": "[parameters('speechName')]"
+              },
+              "tags": "[parameters('tags')]"
+            },
+            "language": {
+              "type": "Microsoft.CognitiveServices/accounts",
+              "apiVersion": "2023-05-01",
+              "name": "[parameters('languageName')]",
+              "location": "[parameters('location')]",
+              "kind": "TextAnalytics",
+              "sku": {
+                "name": "F0"
+              },
+              "properties": {
+                "customSubDomainName": "[parameters('languageName')]"
+              },
+              "tags": "[parameters('tags')]"
+            }
+          },
+          "outputs": {
+            "speechKey": {
+              "type": "securestring",
+              "value": "[listKeys('speech', '2023-05-01').key1]"
+            },
+            "speechRegion": {
+              "type": "string",
+              "value": "[parameters('location')]"
+            },
+            "languageKey": {
+              "type": "securestring",
+              "value": "[listKeys('language', '2023-05-01').key1]"
+            },
+            "languageEndpoint": {
+              "type": "string",
+              "value": "[format('https://{0}.cognitiveservices.azure.com/', parameters('languageName'))]"
+            }
+          }
+        }
+      }
+    },
+    "containerApps": {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "container-apps",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "environmentName": {
+            "value": "[variables('managedEnvironmentName')]"
+          },
+          "backendName": {
+            "value": "[variables('backendAppName')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "backendImage": {
+            "value": "[parameters('backendImage')]"
+          },
+          "acrLoginServer": {
+            "value": "[parameters('acrLoginServer')]"
+          },
+          "acrUsername": {
+            "value": "[parameters('acrUsername')]"
+          },
+          "acrPassword": {
+            "value": "[parameters('acrPassword')]"
+          },
+          "speechKey": {
+            "value": "[listOutputsWithSecureValues('cognitiveServices', '2025-04-01').speechKey]"
+          },
+          "speechRegion": {
+            "value": "[reference('cognitiveServices').outputs.speechRegion.value]"
+          },
+          "languageKey": {
+            "value": "[listOutputsWithSecureValues('cognitiveServices', '2025-04-01').languageKey]"
+          },
+          "languageEndpoint": {
+            "value": "[reference('cognitiveServices').outputs.languageEndpoint.value]"
+          },
+          "tags": {
+            "value": "[variables('defaultTags')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.44.1.10279",
+              "templateHash": "3737661554621209"
+            }
+          },
+          "parameters": {
+            "environmentName": {
+              "type": "string",
+              "metadata": {
+                "description": "Nome do Container Apps Environment."
+              }
+            },
+            "backendName": {
+              "type": "string",
+              "metadata": {
+                "description": "Nome do Container App do backend."
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Região Azure."
+              }
+            },
+            "backendImage": {
+              "type": "string",
+              "metadata": {
+                "description": "URL completa da imagem ACR."
+              }
+            },
+            "acrLoginServer": {
+              "type": "string",
+              "metadata": {
+                "description": "Servidor de login do ACR."
+              }
+            },
+            "acrUsername": {
+              "type": "string",
+              "metadata": {
+                "description": "Usuário admin do ACR."
+              }
+            },
+            "acrPassword": {
+              "type": "securestring",
+              "metadata": {
+                "description": "Senha admin do ACR."
+              }
+            },
+            "speechKey": {
+              "type": "securestring",
+              "metadata": {
+                "description": "Chave do Azure Speech."
+              }
+            },
+            "speechRegion": {
+              "type": "string",
+              "metadata": {
+                "description": "Região do Azure Speech."
+              }
+            },
+            "languageKey": {
+              "type": "securestring",
+              "metadata": {
+                "description": "Chave do Azure AI Language."
+              }
+            },
+            "languageEndpoint": {
+              "type": "string",
+              "metadata": {
+                "description": "Endpoint do Azure AI Language."
+              }
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "Tags dos recursos."
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.App/managedEnvironments",
+              "apiVersion": "2024-03-01",
+              "name": "[parameters('environmentName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "appLogsConfiguration": {
+                  "destination": "none"
+                }
+              },
+              "tags": "[parameters('tags')]"
+            },
+            {
+              "type": "Microsoft.App/containerApps",
+              "apiVersion": "2024-03-01",
+              "name": "[parameters('backendName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments', parameters('environmentName'))]",
+                "configuration": {
+                  "activeRevisionsMode": "Single",
+                  "ingress": {
+                    "external": true,
+                    "targetPort": 8000,
+                    "transport": "http"
+                  },
+                  "secrets": [
+                    {
+                      "name": "registry-password",
+                      "value": "[parameters('acrPassword')]"
+                    },
+                    {
+                      "name": "azure-speech-key",
+                      "value": "[parameters('speechKey')]"
+                    },
+                    {
+                      "name": "azure-language-key",
+                      "value": "[parameters('languageKey')]"
+                    }
+                  ],
+                  "registries": [
+                    {
+                      "server": "[parameters('acrLoginServer')]",
+                      "username": "[parameters('acrUsername')]",
+                      "passwordSecretRef": "registry-password"
+                    }
+                  ]
+                },
+                "template": {
+                  "containers": [
+                    {
+                      "name": "backend",
+                      "image": "[parameters('backendImage')]",
+                      "env": [
+                        {
+                          "name": "APP_ENV",
+                          "value": "demo"
+                        },
+                        {
+                          "name": "LOG_LEVEL",
+                          "value": "INFO"
+                        },
+                        {
+                          "name": "CORS_ORIGINS",
+                          "value": "*"
+                        },
+                        {
+                          "name": "AZURE_SPEECH_KEY",
+                          "secretRef": "azure-speech-key"
+                        },
+                        {
+                          "name": "AZURE_SPEECH_REGION",
+                          "value": "[parameters('speechRegion')]"
+                        },
+                        {
+                          "name": "AZURE_LANGUAGE_KEY",
+                          "secretRef": "azure-language-key"
+                        },
+                        {
+                          "name": "AZURE_LANGUAGE_ENDPOINT",
+                          "value": "[parameters('languageEndpoint')]"
+                        }
+                      ],
+                      "resources": {
+                        "cpu": "[json('0.5')]",
+                        "memory": "1Gi"
+                      },
+                      "probes": [
+                        {
+                          "type": "Liveness",
+                          "httpGet": {
+                            "path": "/api/health",
+                            "port": 8000
+                          },
+                          "initialDelaySeconds": 20,
+                          "periodSeconds": 30
+                        },
+                        {
+                          "type": "Readiness",
+                          "httpGet": {
+                            "path": "/api/health",
+                            "port": 8000
+                          },
+                          "initialDelaySeconds": 10,
+                          "periodSeconds": 15
+                        }
+                      ]
+                    }
+                  ],
+                  "scale": {
+                    "minReplicas": 0,
+                    "maxReplicas": 1
+                  }
+                }
+              },
+              "tags": "[parameters('tags')]",
+              "dependsOn": [
+                "[resourceId('Microsoft.App/managedEnvironments', parameters('environmentName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "backendUrl": {
+              "type": "string",
+              "value": "[format('https://{0}', reference(resourceId('Microsoft.App/containerApps', parameters('backendName')), '2024-03-01').configuration.ingress.fqdn)]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "cognitiveServices"
+      ]
+    },
+    "staticWebApp": {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "static-web-app",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "swaName": {
+            "value": "[variables('staticWebAppName')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "repoUrl": {
+            "value": "[parameters('repoUrl')]"
+          },
+          "tags": {
+            "value": "[variables('defaultTags')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.44.1.10279",
+              "templateHash": "10518281409655151105"
+            }
+          },
+          "parameters": {
+            "swaName": {
+              "type": "string",
+              "metadata": {
+                "description": "Nome do Azure Static Web App."
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Região Azure."
+              }
+            },
+            "repoUrl": {
+              "type": "string",
+              "metadata": {
+                "description": "URL do repositório GitHub do projeto."
+              }
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "Tags dos recursos."
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Web/staticSites",
+              "apiVersion": "2022-09-01",
+              "name": "[parameters('swaName')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "Free",
+                "tier": "Free"
+              },
+              "tags": "[union(parameters('tags'), createObject('repoUrl', parameters('repoUrl')))]"
+            }
+          ],
+          "outputs": {
+            "frontendUrl": {
+              "type": "string",
+              "value": "[format('https://{0}', reference(resourceId('Microsoft.Web/staticSites', parameters('swaName')), '2022-09-01').defaultHostname)]"
+            },
+            "defaultHostname": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Web/staticSites', parameters('swaName')), '2022-09-01').defaultHostname]"
+            }
+          }
+        }
+      }
+    },
+    "budget": {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2025-04-01",
+      "name": "budget",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "budgetName": {
+            "value": "[variables('budgetName')]"
+          },
+          "notificationEmail": {
+            "value": "[parameters('notificationEmail')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.44.1.10279",
+              "templateHash": "12220945066510973462"
+            }
+          },
+          "parameters": {
+            "budgetName": {
+              "type": "string",
+              "metadata": {
+                "description": "Nome do budget mensal."
+              }
+            },
+            "notificationEmail": {
+              "type": "string",
+              "metadata": {
+                "description": "Email para notificações de orçamento."
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Consumption/budgets",
+              "apiVersion": "2024-08-01",
+              "name": "[parameters('budgetName')]",
+              "properties": {
+                "amount": 5,
+                "category": "Cost",
+                "timeGrain": "Monthly",
+                "timePeriod": {
+                  "startDate": "2026-07-01",
+                  "endDate": "2030-12-31"
+                },
+                "notifications": {
+                  "actual80": {
+                    "enabled": true,
+                    "operator": "GreaterThan",
+                    "threshold": 80,
+                    "thresholdType": "Actual",
+                    "contactEmails": [
+                      "[parameters('notificationEmail')]"
+                    ]
+                  },
+                  "actual100": {
+                    "enabled": true,
+                    "operator": "GreaterThan",
+                    "threshold": 100,
+                    "thresholdType": "Actual",
+                    "contactEmails": [
+                      "[parameters('notificationEmail')]"
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "budgetNameOutput": {
+              "type": "string",
+              "value": "[parameters('budgetName')]"
+            }
+          }
+        }
+      }
+    }
+  },
+  "outputs": {
+    "frontendUrl": {
+      "type": "string",
+      "value": "[reference('staticWebApp').outputs.frontendUrl.value]"
+    },
+    "backendUrl": {
+      "type": "string",
+      "value": "[reference('containerApps').outputs.backendUrl.value]"
+    },
+    "speechResourceName": {
+      "type": "string",
+      "value": "[variables('speechName')]"
+    },
+    "languageResourceName": {
+      "type": "string",
+      "value": "[variables('languageName')]"
+    },
+    "languageEndpoint": {
+      "type": "string",
+      "value": "[reference('cognitiveServices').outputs.languageEndpoint.value]"
+    },
+    "repoUrlOutput": {
+      "type": "string",
+      "value": "[parameters('repoUrl')]"
+    }
+  }
+}

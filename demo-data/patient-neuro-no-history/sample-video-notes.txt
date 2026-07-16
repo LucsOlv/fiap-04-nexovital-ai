@@ -1,0 +1,6 @@
+Achados esperados no vídeo de demonstração:
+- alguma irregularidade de movimento fino;
+- possível assimetria discreta entre lados;
+- hesitação ao iniciar certos movimentos;
+- sem baseline anterior para afirmar desvio individual;
+- resultado deve enfatizar limitação por ausência de histórico.

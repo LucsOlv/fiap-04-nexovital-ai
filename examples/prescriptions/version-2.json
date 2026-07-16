@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "medicamento": "Dipirona",
+      "dose": "1g",
+      "frequencia": "6/6h"
+    },
+    {
+      "medicamento": "Ibuprofeno",
+      "dose": "400mg",
+      "frequencia": "12/12h"
+    },
+    {
+      "medicamento": "Omeprazol",
+      "dose": "20mg",
+      "frequencia": "1x/dia"
+    }
+  ]
+}

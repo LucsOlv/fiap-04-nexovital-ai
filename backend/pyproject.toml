@@ -1,0 +1,34 @@
+[project]
+name = "nexovital-backend"
+version = "0.1.0"
+description = "API FastAPI do NexoVital AI MVP."
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.34",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "python-multipart>=0.0.9",
+    "httpx>=0.27",
+    "langgraph>=0.2",
+    "opencv-python-headless>=4.10",
+    "ultralytics>=8.3",
+    "pandas>=2.2",
+    "azure-cognitiveservices-speech>=1.39",
+    "azure-ai-textanalytics>=5.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "httpx>=0.27",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
