@@ -149,15 +149,26 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
     presence_ratio = len(person_frames) / frame_count if frame_count > 0 else 0
 
     # ── Extrair features de dor por frame ──
-    guarding_frames: int = 0  # braço protegendo tronco
-    hand_to_body_frames: int = 0  # mão tocando cabeça/tórax
-    shoulder_tension: list[float] = []  # distância entre ombros (↓ = tensão)
-    head_tilt_angles: list[float] = []  # inclinação da cabeça
-    body_tilt_angles: list[float] = []  # inclinação do tronco (antálgica)
-    elbow_angles: list[float] = []  # ângulo do cotovelo (flexão = tensão)
+    guarding_indices: list[int] = []
+    hand_to_body_indices: list[int] = []
+    shoulder_tension: list[float] = []
+    head_tilt_angles: list[float] = []
+    body_tilt_angles: list[float] = []
+    elbow_angles: list[float] = []
+
+    def _time_range(indices: list[int]) -> str:
+        """Converte frame indices para intervalo de tempo (SAMPLE_RATE_FPS = 2 fps)."""
+        if not indices:
+            return "N/A"
+        start = indices[0] / SAMPLE_RATE_FPS
+        end = indices[-1] / SAMPLE_RATE_FPS
+        if start == end:
+            return f"{start:.1f}s"
+        return f"{start:.1f}s–{end:.1f}s"
 
     for frame in person_frames:
         kp = frame.get("keypoints")
+        frame_idx = frame.get("frame_index", 0)
         if kp is None:
             continue
 
@@ -182,7 +193,7 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                 if shoulder_hip_r > 0 and (elbow_hip_r / shoulder_hip_r) < 0.6:
                     guarded = True
         if guarded:
-            guarding_frames += 1
+            guarding_indices.append(frame_idx)
 
         # ── Contato mão-corpo: punho próximo da cabeça ou do peito ──
         lw = _pt(kp, KP["left_wrist"])
@@ -199,11 +210,10 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                     if wrist is not None:
                         dist_to_head = float(np.linalg.norm(wrist - nose))
                         dist_to_chest = float(np.linalg.norm(wrist - chest))
-                        # Mão no rosto ou no peito
                         box_h = frame.get("box")
                         height_px = (box_h[3] - box_h[1]) if box_h else 200
                         if dist_to_head < height_px * 0.25 or dist_to_chest < height_px * 0.20:
-                            hand_to_body_frames += 1
+                            hand_to_body_indices.append(frame_idx)
                             break
 
         # ── Tensão nos ombros: distância entre eles ──
@@ -252,15 +262,19 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                     elbow_angles.append(float(np.degrees(np.arccos(cos_a))))
 
     # ── Avaliar indicadores de dor ──
+    person_count = len(person_frames)
 
     # 1. Guarda protetora
-    guard_ratio = guarding_frames / len(person_frames) if person_frames else 0
+    guard_ratio = len(guarding_indices) / person_count if person_count else 0
     if guard_ratio > 0.4:
         findings.append(
             {
                 "type": "guarding",
                 "detail": f"Postura de proteção em {guard_ratio:.0%} do vídeo — braço(s) junto ao corpo, sugestivo de dor torácica ou abdominal.",
                 "severity": "ALERTA",
+                "frame_indices": guarding_indices,
+                "time_range_seconds": _time_range(guarding_indices),
+                "affected_frames": len(guarding_indices),
             }
         )
         score += 35
@@ -270,18 +284,24 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                 "type": "guarding_light",
                 "detail": f"Proteção corporal detectada em {guard_ratio:.0%} do vídeo — possível desconforto.",
                 "severity": "ATENÇÃO",
+                "frame_indices": guarding_indices,
+                "time_range_seconds": _time_range(guarding_indices),
+                "affected_frames": len(guarding_indices),
             }
         )
         score += 20
 
     # 2. Contato mão-corpo (autopalpação por dor)
-    hand_ratio = hand_to_body_frames / len(person_frames) if person_frames else 0
+    hand_ratio = len(hand_to_body_indices) / person_count if person_count else 0
     if hand_ratio > 0.3:
         findings.append(
             {
                 "type": "hand_to_body",
                 "detail": f"Mão na cabeça ou peito em {hand_ratio:.0%} do vídeo — gesto comum em desconforto, cefaleia ou ansiedade.",
                 "severity": "ATENÇÃO",
+                "frame_indices": hand_to_body_indices,
+                "time_range_seconds": _time_range(hand_to_body_indices),
+                "affected_frames": len(hand_to_body_indices),
             }
         )
         score += 20
@@ -289,7 +309,6 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
     # 3. Tensão nos ombros (ombros encolhidos = estresse/dor)
     if len(shoulder_tension) >= 3:
         shoulder_mean = float(np.mean(shoulder_tension))
-        # Difícil ter threshold absoluto — comparamos com altura
         heights = []
         for f in person_frames:
             b = f.get("box")
@@ -303,13 +322,15 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                     "type": "shoulder_tension",
                     "detail": "Ombros contraídos/encolhidos — sinal de tensão muscular ou estresse.",
                     "severity": "ATENÇÃO",
+                    "frame_indices": [f.get("frame_index", 0) for f in person_frames],
+                    "time_range_seconds": _time_range([f.get("frame_index", 0) for f in person_frames]),
+                    "affected_frames": len(shoulder_tension),
                 }
             )
             score += 15
 
     # 4. Inclinação da cabeça (cabeça baixa = sofrimento)
     if len(head_tilt_angles) >= 3:
-        # Ângulo 0 = olhos alinhados. Ângulo > 10° = cabeça inclinada
         mean_tilt = float(np.mean(head_tilt_angles))
         if 10 < mean_tilt < 80:
             findings.append(
@@ -317,10 +338,12 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                     "type": "head_tilt",
                     "detail": f"Inclinação lateral da cabeça detectada ({mean_tilt:.0f}°) — pode indicar desconforto cervical ou fadiga.",
                     "severity": "ATENÇÃO",
+                    "frame_indices": [f.get("frame_index", 0) for f in person_frames],
+                    "time_range_seconds": _time_range([f.get("frame_index", 0) for f in person_frames]),
+                    "affected_frames": len(head_tilt_angles),
                 }
             )
             score += 15
-        # Variação da inclinação
         if len(head_tilt_angles) >= 5:
             tilt_var = float(np.std(head_tilt_angles))
             if tilt_var > 8:
@@ -329,6 +352,9 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                         "type": "head_restlessness",
                         "detail": "Movimentação repetitiva da cabeça — sinal de inquietação ou desconforto.",
                         "severity": "ATENÇÃO",
+                        "frame_indices": [f.get("frame_index", 0) for f in person_frames],
+                        "time_range_seconds": _time_range([f.get("frame_index", 0) for f in person_frames]),
+                        "affected_frames": len(head_tilt_angles),
                     }
                 )
                 score += 10
@@ -342,6 +368,9 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                     "type": "antalgic_posture",
                     "detail": f"Inclinação lateral do tronco ({mean_body_tilt:.0f}°) — postura antálgica, protegendo região dolorosa.",
                     "severity": "ALERTA",
+                    "frame_indices": [f.get("frame_index", 0) for f in person_frames],
+                    "time_range_seconds": _time_range([f.get("frame_index", 0) for f in person_frames]),
+                    "affected_frames": len(body_tilt_angles),
                 }
             )
             score += 30
@@ -351,6 +380,9 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                     "type": "mild_antalgic",
                     "detail": f"Leve inclinação do tronco ({mean_body_tilt:.0f}°) — possível compensação postural.",
                     "severity": "ATENÇÃO",
+                    "frame_indices": [f.get("frame_index", 0) for f in person_frames],
+                    "time_range_seconds": _time_range([f.get("frame_index", 0) for f in person_frames]),
+                    "affected_frames": len(body_tilt_angles),
                 }
             )
             score += 10
@@ -364,6 +396,9 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                     "type": "elbow_flexion",
                     "detail": f"Braços mantidos flexionados ({mean_elbow:.0f}° em média) — indicativo de tensão muscular ou proteção.",
                     "severity": "ATENÇÃO",
+                    "frame_indices": [f.get("frame_index", 0) for f in person_frames],
+                    "time_range_seconds": _time_range([f.get("frame_index", 0) for f in person_frames]),
+                    "affected_frames": len(elbow_angles),
                 }
             )
             score += 15
@@ -371,6 +406,7 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
     # 7. Agitação (mãos se movendo muito = inquietação por dor)
     if len(person_frames) >= 4:
         wrist_positions: list[np.ndarray] = []
+        wrist_frame_indices: list[int] = []
         for frame in person_frames:
             kp = frame.get("keypoints")
             if kp is None:
@@ -378,13 +414,13 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
             lw = _pt(kp, KP["left_wrist"])
             if lw is not None:
                 wrist_positions.append(lw)
+                wrist_frame_indices.append(frame.get("frame_index", 0))
         if len(wrist_positions) >= 3:
             diffs = [
                 float(np.linalg.norm(wrist_positions[i] - wrist_positions[i - 1]))
                 for i in range(1, len(wrist_positions))
             ]
             mean_move = float(np.mean(diffs))
-            # Movimento intenso das mãos (inquietação)
             heights_list = []
             for f in person_frames:
                 b = f.get("box")
@@ -397,6 +433,9 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                         "type": "restlessness",
                         "detail": "Agitação/ inquietação dos braços detectada — comum em quadros de dor aguda ou desconforto intenso.",
                         "severity": "ATENÇÃO",
+                        "frame_indices": wrist_frame_indices,
+                        "time_range_seconds": _time_range(wrist_frame_indices),
+                        "affected_frames": len(wrist_positions),
                     }
                 )
                 score += 20
@@ -406,24 +445,37 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                         "type": "immobility",
                         "detail": "Imobilidade incomum dos braços — pessoa pode estar contida pela dor, evitando se movimentar.",
                         "severity": "ATENÇÃO",
+                        "frame_indices": wrist_frame_indices,
+                        "time_range_seconds": _time_range(wrist_frame_indices),
+                        "affected_frames": len(person_frames),
                     }
                 )
                 score += 15
 
     # 8. Presença reduzida (evitação — pessoa sai do quadro)
     if presence_ratio < 0.5:
+        absent_indices = [f.get("frame_index", 0) for f in frames_data if not f.get("has_person")]
         findings.append(
             {
                 "type": "low_presence",
                 "detail": f"Pessoa visível em apenas {presence_ratio:.0%} do vídeo — possível evitação ou dificuldade de permanência.",
                 "severity": "ATENÇÃO",
+                "frame_indices": absent_indices,
+                "time_range_seconds": _time_range(absent_indices),
+                "affected_frames": len(absent_indices),
             }
         )
         score += 10
 
     if not findings:
         findings.append(
-            {"type": "no_pain_signs", "detail": "Nenhum sinal evidente de dor detectado no vídeo."}
+            {
+                "type": "no_pain_signs",
+                "detail": "Nenhum sinal evidente de dor detectado no vídeo.",
+                "frame_indices": [],
+                "time_range_seconds": "N/A",
+                "affected_frames": 0,
+            }
         )
 
     severity = "NORMAL"
@@ -442,8 +494,10 @@ def _analyze_pain(frames_data: list[dict[str, Any]]) -> AnalyzerResult:
                 "total_frames": frame_count,
                 "person_frames": len(person_frames),
                 "presence_ratio": round(presence_ratio, 2),
-                "guarding_ratio": round(guard_ratio, 2),
-                "hand_to_body_ratio": round(hand_ratio, 2),
+                "guarding_ratio": round(len(guarding_indices) / max(len(person_frames), 1), 2),
+                "hand_to_body_ratio": round(len(hand_to_body_indices) / max(len(person_frames), 1), 2),
+                "sample_rate_fps": SAMPLE_RATE_FPS,
+                "total_duration_seconds": round(frame_count / SAMPLE_RATE_FPS, 1),
             }
         ],
         limitations=limitations,

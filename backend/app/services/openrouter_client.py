@@ -10,6 +10,7 @@ from typing import Any, cast
 import httpx
 
 from app.core.config import settings
+from app.services.anonymizer import strip_patient_pii
 from app.state import AnalyzerResult
 
 logger = logging.getLogger("nexovital.services.openrouter")
@@ -129,20 +130,17 @@ def _build_context(
         f"NÍVEL DE RISCO (determinístico): {risk_level}",
         f"SCORE: {score}/100",
     ]
-
-    # Dados do paciente
+    # Dados do paciente (anonimizados para privacidade)
     if patient:
-        parts.append(
-            f"\nPACIENTE: {patient.get('name', '?')}, "
-            f"{patient.get('age', '?')} anos, sexo {patient.get('sex', '?')}"
-        )
-        summary = patient.get("summary", "")
+        safe = strip_patient_pii(patient)
+        parts.append(f"\nPACIENTE: {safe.get('patient_ref', '?')}")
+        summary = safe.get("summary", "")
         if summary:
             parts.append(f"RESUMO CLÍNICO DO PACIENTE: {summary}")
-        notes = patient.get("notes", "")
+        notes = safe.get("notes", "")
         if notes:
             parts.append(f"OBSERVAÇÕES: {notes}")
-        prev_meds = patient.get("previous_medications", [])
+        prev_meds = safe.get("previous_medications", [])
         if prev_meds:
             meds_str = ", ".join(
                 f"{m.get('name', '')} {m.get('dose', '')} {m.get('frequency', '')}"

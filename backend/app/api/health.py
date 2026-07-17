@@ -20,5 +20,6 @@ def health_check() -> dict[str, Any]:
             "azure_speech": settings.speech_configured,
             "azure_language": settings.language_configured,
             "openrouter": settings.openrouter_configured,
+            "webhook_alert": settings.webhook_configured,
         },
     }

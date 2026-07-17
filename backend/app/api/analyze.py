@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 from typing import Annotated, Any, cast
@@ -15,6 +16,7 @@ from app.schemas.analysis import (
     AnalysisResponse,
     AnalyzerOutput,
 )
+from app.services.alert_webhook import send_alert_webhook
 from app.state import AnalysisState
 
 logger = logging.getLogger("nexovital.api.analyze")
@@ -104,6 +106,23 @@ async def analyze(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Erro na pipeline de análise.",
         ) from exc
+
+    # ── Notificação externa (fire-and-forget, não bloqueia resposta) ──
+    risk_level = result.get("risk_level", "NORMAL")
+    if risk_level == "ALERTA":
+        patient_data = result.get("patient", {})
+        final_report = result.get("final_report", {}) or {}
+        asyncio.ensure_future(
+            send_alert_webhook(
+                patient_name=patient_data.get("name", "Paciente"),
+                patient_id=patient_data.get("id", "unknown"),
+                risk_level=risk_level,
+                score=result.get("deterministic_score", 0),
+                modalities=result.get("available_modalities", []),
+                limitations=result.get("limitations", []),
+                summary=final_report.get("summary", "Resumo não disponível."),
+            )
+        )
 
     # ── Montar resposta ──
     avail = result.get("available_modalities", [])

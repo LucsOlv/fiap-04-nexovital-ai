@@ -32,6 +32,13 @@ class Settings(BaseSettings):
     openrouter_timeout: float = 60.0
     openrouter_max_retries: int = 3
 
+    # Alert webhook
+    webhook_alert_url: str = ""
+
+    @property
+    def webhook_configured(self) -> bool:
+        return bool(self.webhook_alert_url)
+
     # Media limits
     video_max_bytes: int = 25 * 1024 * 1024
     video_max_duration_seconds: float = 30.0

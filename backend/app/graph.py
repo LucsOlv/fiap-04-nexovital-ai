@@ -115,6 +115,7 @@ def _analyze_modalities(state: AnalysisState) -> AnalysisState:
         state["medication_result"] = analyze_medications(
             state.get("current_medications"),
             previous,
+            has_history=patient.get("has_history", True),
         )
     else:
         state["medication_result"] = {

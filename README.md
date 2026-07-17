@@ -210,23 +210,22 @@ Dados em [`demo-data/`](demo-data/). Fixtures versionadas em [`frontend/src/fixt
 
 | Requisito | Evidência | Status |
 | --- | --- | --- |
-| Análise de vídeo | YOLOv8n Pose + 8 heurísticas | Atendido |
+| Análise de vídeo | YOLOv8n Pose + 8 heurísticas + timestamps por frame | Atendido |
 | Análise de áudio | Azure Speech + métricas acústicas | Atendido |
 | Análise de texto | Azure Language + 35 termos críticos | Atendido |
 | Sinais vitais (CSV) | 3 métodos: faixas, tendência, z-score | Atendido |
-| Medicamentos | Diff determinístico (added/removed/modified) | Atendido |
+| Medicamentos | Diff determinístico + `has_history` | Atendido |
 | LangGraph | 6 nós, StateGraph, `ainvoke` | Atendido |
 | Azure Speech to Text | SDK oficial `pt-BR` | Atendido |
 | Azure Language | SDK oficial (sentimento + frases-chave) | Atendido |
 | Fusão multimodal | Pesos + regras heurísticas | Atendido |
 | 3 pacientes | Fixtures + demo-data | Atendido |
-| Resumo IA | OpenRouter com schema validado | Atendido |
-| Alerta automático | Score + nível na tela (card visual) | Parcial |
+| Resumo IA | OpenRouter com schema validado + PII anonimizada | Atendido |
+| Alerta + notificação | Score visual + webhook externo (`WEBHOOK_ALERT_URL`) | Atendido |
 | Deploy Azure | Bicep + CI/CD compilam | Parcial |
 | Vídeo demonstrativo | Roteiro em `GUIA_VIDEO_DEMONSTRACAO.md` | Planejado |
-| Notificação externa | Não implementado | — |
 
-**21 Atendidos · 2 Parciais · 1 Planejado**
+**12 Atendidos · 1 Parcial · 1 Planejado**
 
 ---
 

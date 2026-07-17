@@ -25,6 +25,16 @@ def test_no_history_empty_list():
     assert len(added) == 1
 
 
+
+def test_no_history_flag_false_skips_comparison():
+    """has_history=False → sem baseline, mesmo com lista vazia no previous."""
+    current = [{"name": "Dipirona", "dose": "500mg", "frequency": "6/6h"}]
+    result = analyze_medications(current, [], has_history=False)
+    assert result["status"] == "ok"
+    assert result["findings"][0]["type"] == "no_baseline"
+    assert result["score"] == 0
+    assert "sem baseline histórica" in result["limitations"][0].lower()
+
 def test_unchanged_medications():
     meds = [{"name": "A", "dose": "10mg", "frequency": "12/12h"}]
     result = analyze_medications(meds, meds)

@@ -10,6 +10,7 @@ from app.state import AnalyzerResult
 def analyze_medications(
     current: list[dict[str, Any]] | None,
     previous: list[dict[str, Any]] | None,
+    has_history: bool = True,
 ) -> AnalyzerResult:
     if current is None:
         return AnalyzerResult(
@@ -19,6 +20,29 @@ def analyze_medications(
             findings=[],
             evidence=[],
             limitations=["Nenhum medicamento informado."],
+        )
+
+    if not has_history:
+        return AnalyzerResult(
+            status="ok",
+            severity="NORMAL",
+            score=0,
+            findings=[
+                {
+                    "type": "no_baseline",
+                    "description": "Sem histórico de medicamentos para comparação.",
+                }
+            ],
+            evidence=[
+                {
+                    "current_medications": current,
+                    "previous_medications": previous,
+                    "has_history": False,
+                }
+            ],
+            limitations=[
+                "Paciente sem baseline histórica de medicamentos — comparação não disponível."
+            ],
         )
 
     if previous is None:
