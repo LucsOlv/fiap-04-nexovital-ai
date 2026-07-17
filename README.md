@@ -67,6 +67,22 @@ flowchart LR
     VR --> END["END"]
 ```
 
+### Resumo
+
+O **Frontend React** (2 telas: `/pacientes` e `/analise`) coleta vídeo, áudio, texto, CSV e medicamentos via formulário multipart. A **API FastAPI** recebe no endpoint `POST /api/analyze`, valida tipo MIME e tamanho, e dispara o **grafo LangGraph** compilado (`_graph.ainvoke`).
+
+O grafo executa 6 nós em sequência:
+1. **validate_input** — identifica quais modalidades foram enviadas
+2. **prepare_context** — verifica `has_history` e adiciona limitações
+3. **analyze_modalities** — roda os 5 analisadores (sequencial)
+4. **fuse_evidence** — calcula score determinístico e nível (NORMAL/ATENÇÃO/ALERTA)
+5. **generate_summary** — chama OpenRouter para resumo textual
+6. **validate_and_return** — fallback se OpenRouter falhar
+
+Cada analisador opera de forma independente. Modalidades ausentes recebem `status: "missing"` e não interrompem a pipeline. A **fusão** aplica pesos por modalidade (vitals 0.30, video 0.25, audio 0.20, text 0.15, medications 0.10) mais regras heurísticas (convergência, ausência de histórico, anomalia forte em vitais). O **OpenRouter** gera causas, tratamentos e correlações — mas o nível de risco é sempre decidido deterministicamente pela fusão.
+
+Não há banco de dados, worker, fila ou autenticação. O processamento é síncrono (tudo em uma requisição HTTP). Arquivos temporários são removidos ao final de cada analisador. Pacientes são persistidos apenas no `localStorage` do navegador.
+
 **Princípio**: OpenRouter **não decide** o nível de risco — a fusão determinística decide. Modelo externo gera apenas o resumo textual (causas, tratamentos, correlações).
 
 ---
