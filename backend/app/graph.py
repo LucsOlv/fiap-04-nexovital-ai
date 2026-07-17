@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import logging
 
-from langgraph.graph import StateGraph, END
+from langgraph.graph import END, StateGraph
+from langgraph.graph.state import CompiledStateGraph
 
 from app.analyzers.audio import analyze_audio
 from app.analyzers.fusion import fuse_evidence
@@ -50,7 +51,14 @@ def _analyze_modalities(state: AnalysisState) -> AnalysisState:
     if "video" in modalities:
         state["video_result"] = analyze_video(state.get("video_bytes"))
     else:
-        state["video_result"] = {"status": "missing", "severity": "NORMAL", "score": 0, "findings": [], "evidence": [], "limitations": ["Vídeo não enviado."]}
+        state["video_result"] = {
+            "status": "missing",
+            "severity": "NORMAL",
+            "score": 0,
+            "findings": [],
+            "evidence": [],
+            "limitations": ["Vídeo não enviado."],
+        }
 
     if "audio" in modalities:
         state["audio_result"] = analyze_audio(
@@ -61,7 +69,14 @@ def _analyze_modalities(state: AnalysisState) -> AnalysisState:
             azure_language_endpoint=settings.azure_language_endpoint,
         )
     else:
-        state["audio_result"] = {"status": "missing", "severity": "NORMAL", "score": 0, "findings": [], "evidence": [], "limitations": ["Áudio não enviado."]}
+        state["audio_result"] = {
+            "status": "missing",
+            "severity": "NORMAL",
+            "score": 0,
+            "findings": [],
+            "evidence": [],
+            "limitations": ["Áudio não enviado."],
+        }
 
     if "text" in modalities:
         state["text_result"] = analyze_text(
@@ -70,7 +85,14 @@ def _analyze_modalities(state: AnalysisState) -> AnalysisState:
             azure_language_endpoint=settings.azure_language_endpoint,
         )
     else:
-        state["text_result"] = {"status": "missing", "severity": "NORMAL", "score": 0, "findings": [], "evidence": [], "limitations": ["Texto clínico não enviado."]}
+        state["text_result"] = {
+            "status": "missing",
+            "severity": "NORMAL",
+            "score": 0,
+            "findings": [],
+            "evidence": [],
+            "limitations": ["Texto clínico não enviado."],
+        }
 
     if "vitals" in modalities:
         state["vitals_result"] = analyze_vitals(
@@ -78,7 +100,14 @@ def _analyze_modalities(state: AnalysisState) -> AnalysisState:
             max_rows=settings.csv_max_rows,
         )
     else:
-        state["vitals_result"] = {"status": "missing", "severity": "NORMAL", "score": 0, "findings": [], "evidence": [], "limitations": ["CSV de sinais vitais não enviado."]}
+        state["vitals_result"] = {
+            "status": "missing",
+            "severity": "NORMAL",
+            "score": 0,
+            "findings": [],
+            "evidence": [],
+            "limitations": ["CSV de sinais vitais não enviado."],
+        }
 
     if "medications" in modalities:
         patient = state.get("patient", {})
@@ -88,7 +117,14 @@ def _analyze_modalities(state: AnalysisState) -> AnalysisState:
             previous,
         )
     else:
-        state["medication_result"] = {"status": "missing", "severity": "NORMAL", "score": 0, "findings": [], "evidence": [], "limitations": ["Medicamentos não informados."]}
+        state["medication_result"] = {
+            "status": "missing",
+            "severity": "NORMAL",
+            "score": 0,
+            "findings": [],
+            "evidence": [],
+            "limitations": ["Medicamentos não informados."],
+        }
 
     return state
 
@@ -144,7 +180,7 @@ def _validate_and_return(state: AnalysisState) -> AnalysisState:
     return state
 
 
-def build_graph() -> StateGraph:
+def build_graph() -> CompiledStateGraph[AnalysisState, None, AnalysisState, AnalysisState]:
     workflow = StateGraph(AnalysisState)
 
     workflow.add_node("validate_input", _validate_input)

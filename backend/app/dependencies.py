@@ -12,8 +12,6 @@ def get_logger(name: str = "nexovital") -> logging.Logger:
     logger.setLevel(settings.log_level.upper())
     if not logger.handlers:
         handler = logging.StreamHandler()
-        handler.setFormatter(logging.Formatter(
-            "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
-        ))
+        handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s"))
         logger.addHandler(handler)
     return logger

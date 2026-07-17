@@ -4,9 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
-import tempfile
-from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Any, cast
 
 from fastapi import APIRouter, Form, HTTPException, UploadFile, status
 
@@ -44,20 +42,20 @@ async def analyze(
 
     # ── Validar entrada ──
     try:
-        patient_data = json.loads(patient) if patient else {}
+        patient_data = cast(dict[str, Any], json.loads(patient)) if patient else {}
     except json.JSONDecodeError:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="JSON do paciente inválido.",
-        )
+        ) from None
 
     try:
-        current_meds = json.loads(medications) if medications else None
+        current_meds = cast(list[dict[str, Any]], json.loads(medications)) if medications else None
     except json.JSONDecodeError:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="JSON de medicamentos inválido.",
-        )
+        ) from None
 
     # ── Ler arquivos em memória ──
     video_bytes: bytes | None = None
@@ -70,9 +68,17 @@ async def analyze(
         )
     if audio:
         audio_bytes = await _read_and_validate(
-            audio, settings.audio_max_bytes,
-            ["audio/wav", "audio/mpeg", "audio/mp4", "audio/webm", "audio/x-m4a",
-             "audio/ogg", "audio/mp3"],
+            audio,
+            settings.audio_max_bytes,
+            [
+                "audio/wav",
+                "audio/mpeg",
+                "audio/mp4",
+                "audio/webm",
+                "audio/x-m4a",
+                "audio/ogg",
+                "audio/mp3",
+            ],
         )
     if vitals_csv:
         csv_bytes = await _read_and_validate(
@@ -91,13 +97,13 @@ async def analyze(
 
     # ── Executar grafo (síncrono — ainvoke aguarda término) ──
     try:
-        result = await _graph.ainvoke(state)  # type: ignore[arg-type]
+        result = await _graph.ainvoke(state)
     except Exception as exc:
         logger.exception("Pipeline failed")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erro na pipeline de análise: {exc}",
-        )
+            detail="Erro na pipeline de análise.",
+        ) from exc
 
     # ── Montar resposta ──
     avail = result.get("available_modalities", [])
@@ -121,13 +127,15 @@ async def analyze(
 
 
 async def _read_and_validate(
-    upload: UploadFile, max_bytes: int, allowed_types: list[str],
-) -> bytes:
+    upload: UploadFile,
+    max_bytes: int,
+    allowed_types: list[str],
+) -> bytes | None:
     data = await upload.read()
     if len(data) > max_bytes:
         raise HTTPException(
             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail=f"Arquivo excede o tamanho máximo de {max_bytes // (1024*1024)} MB.",
+            detail=f"Arquivo excede o tamanho máximo de {max_bytes // (1024 * 1024)} MB.",
         )
     content_type = upload.content_type or ""
     if content_type:
@@ -142,7 +150,7 @@ async def _read_and_validate(
     return data
 
 
-def _to_analyzer_output(data: dict | None) -> AnalyzerOutput | None:
+def _to_analyzer_output(data: dict[str, Any] | None) -> AnalyzerOutput | None:
     if data is None:
         return None
     return AnalyzerOutput(
@@ -150,12 +158,14 @@ def _to_analyzer_output(data: dict | None) -> AnalyzerOutput | None:
         severity=data.get("severity", "NORMAL"),
         score=data.get("score", 0),
         findings=data.get("findings", []),
-        evidence=data.get("evidence", []) if isinstance(data.get("evidence"), list) else [data.get("evidence", {})],
+        evidence=data.get("evidence", [])
+        if isinstance(data.get("evidence"), list)
+        else [data.get("evidence", {})],
         limitations=data.get("limitations", []),
     )
 
 
-def _to_ai_report(data: dict | None) -> AiReport | None:
+def _to_ai_report(data: dict[str, Any] | None) -> AiReport | None:
     if data is None:
         return None
     return AiReport(

@@ -7,18 +7,8 @@ param backendName string
 @description('Região Azure.')
 param location string
 
-@description('URL completa da imagem ACR.')
+@description('URL completa da imagem pública no GHCR.')
 param backendImage string
-
-@description('Servidor de login do ACR.')
-param acrLoginServer string
-
-@description('Usuário admin do ACR.')
-param acrUsername string
-
-@description('Senha admin do ACR.')
-@secure()
-param acrPassword string
 
 @description('Chave do Azure Speech.')
 @secure()
@@ -33,6 +23,16 @@ param languageKey string
 
 @description('Endpoint do Azure AI Language.')
 param languageEndpoint string
+
+@description('Chave do OpenRouter.')
+@secure()
+param openRouterApiKey string
+
+@description('Modelo usado no OpenRouter.')
+param openRouterModel string
+
+@description('URL-base da API OpenRouter.')
+param openRouterBaseUrl string
 
 @description('Tags dos recursos.')
 param tags object = {}
@@ -62,10 +62,6 @@ resource backendApp 'Microsoft.App/containerApps@2024-03-01' = {
       }
       secrets: [
         {
-          name: 'registry-password'
-          value: acrPassword
-        }
-        {
           name: 'azure-speech-key'
           value: speechKey
         }
@@ -73,12 +69,9 @@ resource backendApp 'Microsoft.App/containerApps@2024-03-01' = {
           name: 'azure-language-key'
           value: languageKey
         }
-      ]
-      registries: [
         {
-          server: acrLoginServer
-          username: acrUsername
-          passwordSecretRef: 'registry-password'
+          name: 'openrouter-api-key'
+          value: openRouterApiKey
         }
       ]
     }
@@ -115,6 +108,18 @@ resource backendApp 'Microsoft.App/containerApps@2024-03-01' = {
             {
               name: 'AZURE_LANGUAGE_ENDPOINT'
               value: languageEndpoint
+            }
+            {
+              name: 'OPENROUTER_API_KEY'
+              secretRef: 'openrouter-api-key'
+            }
+            {
+              name: 'OPENROUTER_MODEL'
+              value: openRouterModel
+            }
+            {
+              name: 'OPENROUTER_BASE_URL'
+              value: openRouterBaseUrl
             }
           ]
           resources: {

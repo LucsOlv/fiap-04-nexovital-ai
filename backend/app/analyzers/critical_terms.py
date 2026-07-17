@@ -13,7 +13,6 @@ CRITICAL_TERMS: list[tuple[str, str]] = [
     ("taquipneia", "ATENÇÃO"),
     ("saturação baixa", "ALERTA"),
     ("dessaturação", "ALERTA"),
-
     # Cardiovasculares
     ("dor no peito", "ALERTA"),
     ("dor torácica", "ALERTA"),
@@ -22,7 +21,6 @@ CRITICAL_TERMS: list[tuple[str, str]] = [
     ("bradicardia", "ATENÇÃO"),
     ("hipotensão", "ATENÇÃO"),
     ("hipertensão severa", "ALERTA"),
-
     # Neurológicos
     ("confusão mental", "ALERTA"),
     ("sonolência excessiva", "ATENÇÃO"),
@@ -32,7 +30,6 @@ CRITICAL_TERMS: list[tuple[str, str]] = [
     ("tontura intensa", "ATENÇÃO"),
     ("fraqueza súbita", "ALERTA"),
     ("dormência", "ATENÇÃO"),
-
     # Gerais
     ("cansaço extremo", "ATENÇÃO"),
     ("fadiga intensa", "ATENÇÃO"),
@@ -42,13 +39,10 @@ CRITICAL_TERMS: list[tuple[str, str]] = [
     ("piora significativa", "ATENÇÃO"),
     ("não responde", "ALERTA"),
     ("inconsciente", "ALERTA"),
-
     # Fala / áudio
     ("não consegue falar", "ALERTA"),
     ("fala arrastada", "ATENÇÃO"),
     ("voz trêmula", "ATENÇÃO"),
 ]
 
-CRITICAL_TERMS_LOWER: dict[str, str] = {
-    term.lower(): severity for term, severity in CRITICAL_TERMS
-}
+CRITICAL_TERMS_LOWER: dict[str, str] = {term.lower(): severity for term, severity in CRITICAL_TERMS}

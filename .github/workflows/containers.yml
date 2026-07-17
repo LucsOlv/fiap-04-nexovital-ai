@@ -2,36 +2,36 @@ name: Containers
 
 on:
   push:
-    paths:
-      [
-        "backend/**",
-        "worker/**",
-        "frontend/**",
-        "packages/**",
-        ".github/workflows/containers.yml",
-      ]
+    branches: [main]
+    paths: ["backend/**", "frontend/**", ".github/workflows/containers.yml"]
   pull_request:
-    paths:
-      [
-        "backend/**",
-        "worker/**",
-        "frontend/**",
-        "packages/**",
-        ".github/workflows/containers.yml",
-      ]
+    paths: ["backend/**", "frontend/**", ".github/workflows/containers.yml"]
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  BACKEND_IMAGE: ghcr.io/lucsolv/fiap-04-nexovital-ai/backend:latest
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [backend, worker, frontend]
+        service: [backend, frontend]
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
-      # Build a partir da raiz do repo; nenhum push é realizado (push: false).
+      - uses: docker/login-action@v3
+        if: github.event_name == 'push' && matrix.service == 'backend'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ${{ matrix.service }}/Dockerfile
-          push: false
+          context: ./${{ matrix.service }}
+          file: ./${{ matrix.service }}/Dockerfile
+          push: ${{ github.event_name == 'push' && matrix.service == 'backend' }}
+          tags: ${{ env.BACKEND_IMAGE }}

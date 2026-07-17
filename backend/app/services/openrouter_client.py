@@ -5,10 +5,12 @@ from __future__ import annotations
 import json
 import logging
 import time
+from typing import Any, cast
 
 import httpx
 
 from app.core.config import settings
+from app.state import AnalyzerResult
 
 logger = logging.getLogger("nexovital.services.openrouter")
 
@@ -55,26 +57,33 @@ Responda APENAS com JSON:
 
 
 def generate_report(
-    video_result: dict | None,
-    audio_result: dict | None,
-    text_result: dict | None,
-    vitals_result: dict | None,
-    medication_result: dict | None,
+    video_result: AnalyzerResult | None,
+    audio_result: AnalyzerResult | None,
+    text_result: AnalyzerResult | None,
+    vitals_result: AnalyzerResult | None,
+    medication_result: AnalyzerResult | None,
     risk_level: str,
     deterministic_score: int,
-    fusion_correlations: list[dict],
+    fusion_correlations: list[dict[str, Any]],
     fusion_limitations: list[str],
-    patient: dict | None = None,
-) -> dict | None:
+    patient: dict[str, Any] | None = None,
+) -> dict[str, Any] | None:
     """Gera relatório estruturado via OpenRouter."""
     if not settings.openrouter_configured:
         logger.warning("OpenRouter não configurado — relatório IA indisponível.")
         return None
 
     context = _build_context(
-        video_result, audio_result, text_result, vitals_result,
-        medication_result, risk_level, deterministic_score,
-        fusion_correlations, fusion_limitations, patient,
+        video_result,
+        audio_result,
+        text_result,
+        vitals_result,
+        medication_result,
+        risk_level,
+        deterministic_score,
+        fusion_correlations,
+        fusion_limitations,
+        patient,
     )
 
     for attempt in range(settings.openrouter_max_retries):
@@ -89,13 +98,13 @@ def generate_report(
                 if lines and lines[-1].startswith("```"):
                     lines = lines[:-1]
                 cleaned = "\n".join(lines)
-            parsed = json.loads(cleaned)
+            parsed = cast(dict[str, Any], json.loads(cleaned))
             _validate_report_schema(parsed)
             return parsed
         except (json.JSONDecodeError, ValueError) as exc:
             logger.warning("OpenRouter attempt %d failed: %s", attempt + 1, exc)
             if attempt < settings.openrouter_max_retries - 1:
-                time.sleep(2 ** attempt)
+                time.sleep(2**attempt)
         except Exception as exc:
             logger.error("OpenRouter unexpected error: %s", exc)
             return None
@@ -105,10 +114,16 @@ def generate_report(
 
 
 def _build_context(
-    video: dict | None, audio: dict | None, text: dict | None,
-    vitals: dict | None, meds: dict | None,
-    risk_level: str, score: int, correlations: list[dict], limitations: list[str],
-    patient: dict | None = None,
+    video: AnalyzerResult | None,
+    audio: AnalyzerResult | None,
+    text: AnalyzerResult | None,
+    vitals: AnalyzerResult | None,
+    meds: AnalyzerResult | None,
+    risk_level: str,
+    score: int,
+    correlations: list[dict[str, Any]],
+    limitations: list[str],
+    patient: dict[str, Any] | None = None,
 ) -> str:
     parts: list[str] = [
         f"NÍVEL DE RISCO (determinístico): {risk_level}",
@@ -117,7 +132,10 @@ def _build_context(
 
     # Dados do paciente
     if patient:
-        parts.append(f"\nPACIENTE: {patient.get('name', '?')}, {patient.get('age', '?')} anos, sexo {patient.get('sex', '?')}")
+        parts.append(
+            f"\nPACIENTE: {patient.get('name', '?')}, "
+            f"{patient.get('age', '?')} anos, sexo {patient.get('sex', '?')}"
+        )
         summary = patient.get("summary", "")
         if summary:
             parts.append(f"RESUMO CLÍNICO DO PACIENTE: {summary}")
@@ -126,13 +144,16 @@ def _build_context(
             parts.append(f"OBSERVAÇÕES: {notes}")
         prev_meds = patient.get("previous_medications", [])
         if prev_meds:
-            meds_str = ", ".join(f"{m.get('name','')} {m.get('dose','')} {m.get('frequency','')}" for m in prev_meds)
+            meds_str = ", ".join(
+                f"{m.get('name', '')} {m.get('dose', '')} {m.get('frequency', '')}"
+                for m in prev_meds
+            )
             parts.append(f"MEDICAMENTOS ANTERIORES: {meds_str}")
 
     if correlations:
-        parts.append("CORRELAÇÕES DETECTADAS: " + "; ".join(
-            c.get("description", "") for c in correlations
-        ))
+        parts.append(
+            "CORRELAÇÕES DETECTADAS: " + "; ".join(c.get("description", "") for c in correlations)
+        )
     if limitations:
         parts.append("LIMITAÇÕES DO SISTEMA: " + "; ".join(limitations))
 
@@ -147,7 +168,9 @@ def _build_context(
             parts.append(f"{name}: não disponível")
             continue
         parts.append(f"\n{name}:")
-        parts.append(f"  Severidade: {result.get('severity', '?')}, Score: {result.get('score', '?')}")
+        parts.append(
+            f"  Severidade: {result.get('severity', '?')}, Score: {result.get('score', '?')}"
+        )
         for finding in result.get("findings", []):
             parts.append(f"  - {finding.get('detail', finding.get('description', str(finding)))}")
         for ev in result.get("evidence", []):
@@ -180,12 +203,18 @@ def _call_openrouter(system: str, user: str) -> str:
     )
     response.raise_for_status()
     data = response.json()
-    return data["choices"][0]["message"]["content"]
+    return cast(str, data["choices"][0]["message"]["content"])
 
 
-def _validate_report_schema(report: dict) -> None:
-    required = {"summary", "correlations", "review_points", "limitations",
-                "possible_causes", "possible_treatments"}
+def _validate_report_schema(report: dict[str, Any]) -> None:
+    required = {
+        "summary",
+        "correlations",
+        "review_points",
+        "limitations",
+        "possible_causes",
+        "possible_treatments",
+    }
     missing = required - set(report.keys())
     if missing:
         raise ValueError(f"Schema inválido — campos ausentes: {missing}")
@@ -193,5 +222,8 @@ def _validate_report_schema(report: dict) -> None:
         raise ValueError("Resumo muito curto ou inválido.")
     if not isinstance(report["possible_causes"], list) or len(report["possible_causes"]) < 3:
         raise ValueError("possible_causes deve ter ao menos 3 causas.")
-    if not isinstance(report["possible_treatments"], list) or len(report["possible_treatments"]) < 3:
+    if (
+        not isinstance(report["possible_treatments"], list)
+        or len(report["possible_treatments"]) < 3
+    ):
         raise ValueError("possible_treatments deve ter ao menos 3 tratamentos.")

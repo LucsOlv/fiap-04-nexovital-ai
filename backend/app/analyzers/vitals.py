@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+from typing import Any
 
 import pandas as pd
 
@@ -27,7 +28,14 @@ CRITICAL_THRESHOLDS: dict[str, tuple[float, float]] = {
 }
 
 REQUIRED_COLUMNS = {"timestamp"}
-VITAL_COLUMNS = {"heart_rate", "systolic_bp", "diastolic_bp", "spo2", "respiratory_rate", "temperature"}
+VITAL_COLUMNS = {
+    "heart_rate",
+    "systolic_bp",
+    "diastolic_bp",
+    "spo2",
+    "respiratory_rate",
+    "temperature",
+}
 
 
 def analyze_vitals(csv_bytes: bytes, max_rows: int = 500) -> AnalyzerResult:
@@ -53,9 +61,8 @@ def analyze_vitals(csv_bytes: bytes, max_rows: int = 500) -> AnalyzerResult:
             limitations=[f"Erro ao processar CSV: {exc}"],
         )
 
-    findings: list[dict] = []
+    findings: list[dict[str, Any]] = []
     total_score = 0
-    max_possible = 0
 
     # 1. Regras de faixa
     range_findings = _check_ranges(df)
@@ -99,13 +106,15 @@ def analyze_vitals(csv_bytes: bytes, max_rows: int = 500) -> AnalyzerResult:
         severity=severity,
         score=score,
         findings=findings,
-        evidence=[{
-            "total_rows": len(df),
-            "columns_analyzed": cols_found,
-            "anomaly_count": len(findings),
-            "high_severity_count": len(high_findings),
-            "medium_severity_count": len(medium_findings),
-        }],
+        evidence=[
+            {
+                "total_rows": len(df),
+                "columns_analyzed": cols_found,
+                "anomaly_count": len(findings),
+                "high_severity_count": len(high_findings),
+                "medium_severity_count": len(medium_findings),
+            }
+        ],
         limitations=limitations,
     )
 
@@ -133,8 +142,8 @@ def _parse_csv(csv_bytes: bytes, max_rows: int) -> pd.DataFrame:
     return df
 
 
-def _check_ranges(df: pd.DataFrame) -> list[dict]:
-    findings: list[dict] = []
+def _check_ranges(df: pd.DataFrame) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
     for col, (low, high) in REFERENCE_RANGES.items():
         if col not in df.columns:
             continue
@@ -145,33 +154,37 @@ def _check_ranges(df: pd.DataFrame) -> list[dict]:
             ts = str(df.loc[idx, "timestamp"]) if idx in df.index else "?"
             if value < low:
                 severity = "ALTA" if CRITICAL_THRESHOLDS.get(col, (0, 999))[0] > value else "MÉDIA"
-                findings.append({
-                    "signal": col,
-                    "timestamp": ts,
-                    "value": round(float(value), 1),
-                    "rule": "below_range",
-                    "reference": f"{low}-{high}",
-                    "severity": severity,
-                    "detail": f"{col}={value} abaixo do mínimo ({low}).",
-                    "score_contribution": 15 if severity == "ALTA" else 8,
-                })
+                findings.append(
+                    {
+                        "signal": col,
+                        "timestamp": ts,
+                        "value": round(float(value), 1),
+                        "rule": "below_range",
+                        "reference": f"{low}-{high}",
+                        "severity": severity,
+                        "detail": f"{col}={value} abaixo do mínimo ({low}).",
+                        "score_contribution": 15 if severity == "ALTA" else 8,
+                    }
+                )
             elif value > high:
                 severity = "ALTA" if CRITICAL_THRESHOLDS.get(col, (0, 999))[1] < value else "MÉDIA"
-                findings.append({
-                    "signal": col,
-                    "timestamp": ts,
-                    "value": round(float(value), 1),
-                    "rule": "above_range",
-                    "reference": f"{low}-{high}",
-                    "severity": severity,
-                    "detail": f"{col}={value} acima do máximo ({high}).",
-                    "score_contribution": 15 if severity == "ALTA" else 8,
-                })
+                findings.append(
+                    {
+                        "signal": col,
+                        "timestamp": ts,
+                        "value": round(float(value), 1),
+                        "rule": "above_range",
+                        "reference": f"{low}-{high}",
+                        "severity": severity,
+                        "detail": f"{col}={value} acima do máximo ({high}).",
+                        "score_contribution": 15 if severity == "ALTA" else 8,
+                    }
+                )
     return findings
 
 
-def _check_trends(df: pd.DataFrame) -> list[dict]:
-    findings: list[dict] = []
+def _check_trends(df: pd.DataFrame) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
     for col in ["spo2", "heart_rate", "respiratory_rate"]:
         if col not in df.columns:
             continue
@@ -186,23 +199,29 @@ def _check_trends(df: pd.DataFrame) -> list[dict]:
             continue
         normalized_slope = slope / max(abs(mean_val), 1) if mean_val != 0 else slope
         if abs(normalized_slope) > 0.05:
-            direction = "piora" if (col == "spo2" and slope < 0) or (col != "spo2" and slope > 0) else "melhora"
+            direction = (
+                "piora"
+                if (col == "spo2" and slope < 0) or (col != "spo2" and slope > 0)
+                else "melhora"
+            )
             severity = "MÉDIA" if direction == "piora" else "BAIXA"
-            findings.append({
-                "signal": col,
-                "timestamp": str(df["timestamp"].iloc[-1]),
-                "rule": "trend",
-                "slope": round(float(slope), 4),
-                "direction": direction,
-                "severity": severity,
-                "detail": f"Tendência de {direction} em {col} (slope={slope:.4f}).",
-                "score_contribution": 10 if severity == "MÉDIA" else 5,
-            })
+            findings.append(
+                {
+                    "signal": col,
+                    "timestamp": str(df["timestamp"].iloc[-1]),
+                    "rule": "trend",
+                    "slope": round(float(slope), 4),
+                    "direction": direction,
+                    "severity": severity,
+                    "detail": f"Tendência de {direction} em {col} (slope={slope:.4f}).",
+                    "score_contribution": 10 if severity == "MÉDIA" else 5,
+                }
+            )
     return findings
 
 
-def _check_zscore(df: pd.DataFrame) -> list[dict]:
-    findings: list[dict] = []
+def _check_zscore(df: pd.DataFrame) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
     for col in VITAL_COLUMNS:
         if col not in df.columns:
             continue
@@ -216,16 +235,18 @@ def _check_zscore(df: pd.DataFrame) -> list[dict]:
         z = ((series - mean) / std).abs()
         for idx, z_val in z.items():
             if z_val > 2.5:
-                findings.append({
-                    "signal": col,
-                    "timestamp": str(df.loc[idx, "timestamp"]),
-                    "value": round(float(series[idx]), 1),
-                    "rule": "zscore",
-                    "z_score": round(float(z_val), 2),
-                    "severity": "MÉDIA" if z_val > 3.0 else "BAIXA",
-                    "detail": f"{col}={series[idx]:.1f} com Z-score={z_val:.2f} (>2.5).",
-                    "score_contribution": 10 if z_val > 3.0 else 5,
-                })
+                findings.append(
+                    {
+                        "signal": col,
+                        "timestamp": str(df.loc[idx, "timestamp"]),
+                        "value": round(float(series[idx]), 1),
+                        "rule": "zscore",
+                        "z_score": round(float(z_val), 2),
+                        "severity": "MÉDIA" if z_val > 3.0 else "BAIXA",
+                        "detail": f"{col}={series[idx]:.1f} com Z-score={z_val:.2f} (>2.5).",
+                        "score_contribution": 10 if z_val > 3.0 else 5,
+                    }
+                )
     return findings
 
 
@@ -234,6 +255,6 @@ def _linear_slope(x: range, y: list[float]) -> float:
     n = len(x)
     mx = sum(x) / n
     my = sum(y) / n
-    num = sum((xi - mx) * (yi - my) for xi, yi in zip(x, y))
+    num = sum((xi - mx) * (yi - my) for xi, yi in zip(x, y, strict=True))
     den = sum((xi - mx) ** 2 for xi in x)
     return float(num / den) if den != 0 else 0.0

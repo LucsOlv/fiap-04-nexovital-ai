@@ -1,0 +1,44 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "http://localhost:20128/",
+    "ANTHROPIC_MODEL": "ULTRA"
+  },
+  "model": "ULTRA",
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "PowerShell(*)",
+      "Read(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "Write(*)",
+      "Edit(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "Skill(*)",
+      "TaskCreate(*)",
+      "TaskUpdate(*)",
+      "TaskList(*)",
+      "TaskGet(*)",
+      "TaskStop(*)",
+      "TaskOutput(*)",
+      "Agent(*)",
+      "EnterPlanMode",
+      "ExitPlanMode",
+      "AskUserQuestion",
+      "Artifact(*)",
+      "NotebookEdit(*)",
+      "CronCreate(*)",
+      "CronDelete(*)",
+      "CronList(*)",
+      "Monitor(*)",
+      "SendMessage(*)",
+      "PushNotification(*)",
+      "ScheduleWakeup(*)",
+      "EnterWorktree(*)",
+      "ExitWorktree(*)"
+    ],
+    "deny": [],
+    "defaultMode": "bypassPermissions"
+  }
+}

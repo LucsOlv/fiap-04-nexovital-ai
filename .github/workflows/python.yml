@@ -2,27 +2,22 @@ name: Python
 
 on:
   push:
-    paths:
-      ["backend/**", "worker/**", "packages/**", ".github/workflows/python.yml"]
+    paths: ["backend/**", "pyproject.toml", ".github/workflows/python.yml"]
   pull_request:
-    paths:
-      ["backend/**", "worker/**", "packages/**", ".github/workflows/python.yml"]
+    paths: ["backend/**", "pyproject.toml", ".github/workflows/python.yml"]
 
 jobs:
-  python:
+  backend:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        service: [backend, worker]
     defaults:
       run:
-        working-directory: ${{ matrix.service }}
+        working-directory: backend
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.12"
-      - run: uv sync
+      - run: uv sync --frozen
       - run: uv run ruff check .
-      - run: uv run mypy ${{ matrix.service == 'backend' && 'app' || 'worker' }}
+      - run: uv run mypy app
       - run: uv run pytest

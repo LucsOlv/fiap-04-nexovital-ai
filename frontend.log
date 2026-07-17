@@ -1,0 +1,259 @@
+
+> nexovital-frontend@0.1.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m222[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://100.112.225.189:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://172.17.160.1:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.1.82:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://172.29.0.1:[1m5173[22m/[39m
+[2m08:47:33[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysesPage.tsx, /src/index.css[22m
+[2m09:02:44[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx, /src/index.css[22m
+[2m09:02:44[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/auth/AuthContext.tsx, /src/index.css, /src/pages/AuditPage.tsx, /src/pages/PatientsPage.tsx, /src/pages/AlertsPage.tsx, /src/pages/NewAnalysisPage.tsx, /src/pages/AnalysesPage.tsx[22m
+[2m09:02:44[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m09:02:44[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysesPage.tsx, /src/index.css[22m
+[2m09:02:44[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/NewAnalysisPage.tsx, /src/index.css[22m
+[2m09:02:49[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx, /src/index.css[22m
+[2m09:02:49[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/auth/AuthContext.tsx, /src/index.css, /src/pages/AuditPage.tsx, /src/pages/PatientsPage.tsx, /src/pages/AlertsPage.tsx, /src/pages/NewAnalysisPage.tsx, /src/pages/AnalysesPage.tsx[22m
+[2m09:02:49[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysesPage.tsx, /src/index.css[22m
+[2m09:02:49[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m09:02:49[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/NewAnalysisPage.tsx, /src/index.css[22m
+[2m09:02:49[22m [36m[1m[vite][22m[39m [33mhmr invalidate [39m[2m/src/components/Sidebar.tsx[22m Could not Fast Refresh ("navigation" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m09:02:49[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/AppLayout.tsx[22m
+[2m09:02:49[22m [36m[1m[vite][22m[39m [33mhmr invalidate [39m[2m/src/auth/AuthContext.tsx[22m Could not Fast Refresh ("useAuth" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m09:02:49[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/auth/AuthContext.tsx[22m
+[2m09:03:18[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/auth/AuthContext.tsx, /src/index.css, /src/pages/AuditPage.tsx, /src/pages/PatientsPage.tsx, /src/pages/AlertsPage.tsx, /src/pages/NewAnalysisPage.tsx, /src/pages/AnalysesPage.tsx[22m
+[2m09:03:18[22m [36m[1m[vite][22m[39m [33mhmr invalidate [39m[2m/src/auth/AuthContext.tsx[22m Could not Fast Refresh ("useAuth" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m09:03:18[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/auth/AuthContext.tsx[22m
+[2m09:03:38[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysesPage.tsx, /src/index.css[22m
+[2m09:03:52[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysesPage.tsx, /src/index.css[22m
+[2m09:04:24[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx, /src/index.css[22m
+[2m09:04:24[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/auth/AuthContext.tsx, /src/index.css, /src/pages/AuditPage.tsx, /src/pages/PatientsPage.tsx, /src/pages/AlertsPage.tsx, /src/pages/NewAnalysisPage.tsx, /src/pages/AnalysesPage.tsx[22m
+[2m09:04:24[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m09:04:24[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysesPage.tsx, /src/index.css[22m
+[2m09:04:24[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/NewAnalysisPage.tsx, /src/index.css[22m
+[2m09:04:24[22m [36m[1m[vite][22m[39m [33mhmr invalidate [39m[2m/src/components/Sidebar.tsx[22m Could not Fast Refresh ("navigation" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m09:04:24[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/AppLayout.tsx[22m
+[2m09:04:24[22m [36m[1m[vite][22m[39m [33mhmr invalidate [39m[2m/src/auth/AuthContext.tsx[22m Could not Fast Refresh ("useAuth" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m09:04:24[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/auth/AuthContext.tsx[22m
+[2m09:04:26[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx, /src/index.css[22m
+[2m09:04:26[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/auth/AuthContext.tsx, /src/index.css, /src/pages/AuditPage.tsx, /src/pages/PatientsPage.tsx, /src/pages/AlertsPage.tsx, /src/pages/NewAnalysisPage.tsx, /src/pages/AnalysesPage.tsx[22m
+[2m09:04:26[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysesPage.tsx, /src/index.css[22m
+[2m09:04:26[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m09:04:26[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/NewAnalysisPage.tsx, /src/index.css[22m
+[2m09:04:26[22m [36m[1m[vite][22m[39m [33mhmr invalidate [39m[2m/src/components/Sidebar.tsx[22m Could not Fast Refresh ("navigation" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m09:04:26[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/AppLayout.tsx[22m
+[2m09:04:26[22m [36m[1m[vite][22m[39m [33mhmr invalidate [39m[2m/src/auth/AuthContext.tsx[22m Could not Fast Refresh ("useAuth" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m09:04:26[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/auth/AuthContext.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/auth/AuthContext.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/auth/RequireAuth.test.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/auth/RequireAuth.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/AuditPage.tsx, /src/pages/PatientsPage.tsx, /src/pages/AlertsPage.tsx, /src/pages/NewAnalysisPage.tsx, /src/pages/AnalysesPage.tsx, /src/pages/CaseDetailPage.tsx, /src/pages/CaseListPage.tsx, /src/pages/NewCasePage.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/LoginPage.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AlertsPage.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysesPage.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AuditPage.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/CaseDetailPage.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/CaseListPage.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/pages/HomePage.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/NewAnalysisPage.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/NewCasePage.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/SectionPage.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/hooks/useCases.ts[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/services/caseApi.ts[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/types/case.ts[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/pages/AlertsPage.test.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/pages/AnalysesPage.test.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/AlertList.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AppLayout.tsx, /src/index.css[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/CaseVideoPlayer.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/ReportView.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/TranscriptionView.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/lib/auth-types.ts[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/lib/analysis.test.ts[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/lib/analysis.ts[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/lib/wav.test.ts[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/Sidebar.test.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/pages/AuditPage.test.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/pages/HomePage.test.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/pages/NewAnalysisPage.test.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/pages/LoginPage.test.tsx[22m
+[2m09:45:53[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/pages/PatientsPage.test.tsx[22m
+[2m09:52:47[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m09:52:58[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/PatientsPage.tsx[22m
+[2m09:53:10[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AppLayout.tsx, /src/index.css[22m
+[2m09:53:33[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/PatientsPage.tsx, /src/index.css[22m
+[2m09:56:00[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/button.tsx, /src/index.css[22m
+[2m09:58:45[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/PatientsPage.tsx[22m
+[2m09:59:36[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AudioRecorder.tsx, /src/index.css[22m
+[2m09:59:41[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AudioRecorder.tsx, /src/index.css[22m
+[2m09:59:46[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AudioRecorder.tsx, /src/index.css[22m
+[2m09:59:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AudioRecorder.tsx, /src/index.css[22m
+[2m09:59:58[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AudioRecorder.tsx, /src/index.css[22m
+[2m10:00:09[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AudioRecorder.tsx, /src/index.css[22m
+[2m10:00:20[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AudioRecorder.tsx, /src/index.css[22m
+[2m10:00:29[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/AudioRecorder.tsx, /src/index.css[22m
+[2m10:00:37[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/VideoRecorder.tsx, /src/index.css[22m
+[2m10:00:43[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/VideoRecorder.tsx, /src/index.css[22m
+[2m10:00:49[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/VideoRecorder.tsx, /src/index.css[22m
+[2m10:00:57[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/VideoRecorder.tsx, /src/index.css[22m
+[2m10:01:06[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/VideoRecorder.tsx, /src/index.css[22m
+[2m10:01:28[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/VideoRecorder.tsx, /src/index.css[22m
+[2m10:01:35[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/VideoRecorder.tsx, /src/index.css[22m
+[2m10:01:41[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/VideoRecorder.tsx, /src/index.css[22m
+[2m10:01:46[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/VideoRecorder.tsx, /src/index.css[22m
+[2m10:02:28[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/components/VitalSignsChart.tsx[22m
+[2m10:51:18[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m10:51:19[22m [36m[1m[vite][22m[39m [32m✨ new dependencies optimized: [33mrecharts[32m[39m
+[2m10:51:19[22m [36m[1m[vite][22m[39m [32m✨ optimized dependencies changed. reloading[39m
+[2m10:51:32[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m10:55:29[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m10:55:42[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m11:10:22[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m11:10:35[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m11:10:41[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m11:10:46[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m11:10:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m11:14:33[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m11:14:38[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m11:14:43[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m11:14:53[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m
+[2m11:14:53[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\DEV\fiap-04-final\frontend\src\pages\AnalysisPage.tsx: Unexpected token, expected "," (248:6)
+
+[0m [90m 246 |[31m       [33m<[31m[33m/[31m[33mform[31m[33m>[31m
+ [90m 247 |[31m
+[31m[1m>[22m[31m[90m 248 |[31m       {[90m/* ═══ RELATÓRIO ═══ */[31m}
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 249 |[31m       {result [33m&&[31m [33m<[31m[33mReport[31m result[33m=[31m{result} reportTab[33m=[31m{reportTab} setReportTab[33m=[31m{setReportTab} [33m/[31m[33m>[31m}
+ [90m 250 |[31m     [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 251 |[31m   )[33m;[31m[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/DEV/fiap-04-final/frontend/src/pages/AnalysisPage.tsx[39m:248:6
+[33m  246|        </form>
+  247|  
+  248|        {/* ═══ RELATÓRIO ═══ */}
+     |        ^
+  249|        {result && <Report result={result} reportTab={reportTab} setReportTab={setReportTab} />}
+  250|      </div>[39m
+      at constructor (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:365:19)
+      at TypeScriptParserMixin.raise (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at TypeScriptParserMixin.unexpected (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:6636:16)
+      at TypeScriptParserMixin.expect (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:6916:12)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11678:14)
+      at TypeScriptParserMixin.parseExprAtom (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at TypeScriptParserMixin.parseExprAtom (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOpBaseRightExpr (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11003:34)
+      at TypeScriptParserMixin.parseExprOpRightExpr (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10998:21)
+      at TypeScriptParserMixin.parseExprOp (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10964:27)
+      at TypeScriptParserMixin.parseExprOp (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9323:18)
+      at TypeScriptParserMixin.parseExprOp (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10970:21)
+      at TypeScriptParserMixin.parseExprOp (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9323:18)
+      at TypeScriptParserMixin.parseExprOps (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10925:17)
+      at TypeScriptParserMixin.parseMaybeConditional (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9803:20)
+      at TypeScriptParserMixin.parseExpressionBase (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10797:39
+      at TypeScriptParserMixin.allowInAnd (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at TypeScriptParserMixin.parseExpression (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at TypeScriptParserMixin.jsxParseExpressionContainer (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4644:31)
+      at TypeScriptParserMixin.jsxParseElementAt (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4723:36)
+      at TypeScriptParserMixin.jsxParseElement (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9792:39
+      at TypeScriptParserMixin.tryParse (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:6924:20)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9792:18)
+      at C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10817:39
+      at TypeScriptParserMixin.allowInAnd (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at TypeScriptParserMixin.parseExprAtom (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at TypeScriptParserMixin.parseExprAtom (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11083:21)
+[2m11:14:54[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\DEV\fiap-04-final\frontend\src\pages\AnalysisPage.tsx: Unexpected token, expected "," (248:6)
+
+[0m [90m 246 |[31m       [33m<[31m[33m/[31m[33mform[31m[33m>[31m
+ [90m 247 |[31m
+[31m[1m>[22m[31m[90m 248 |[31m       {[90m/* ═══ RELATÓRIO ═══ */[31m}
+ [90m     |[31m       [31m[1m^[22m[31m
+ [90m 249 |[31m       {result [33m&&[31m [33m<[31m[33mReport[31m result[33m=[31m{result} reportTab[33m=[31m{reportTab} setReportTab[33m=[31m{setReportTab} [33m/[31m[33m>[31m}
+ [90m 250 |[31m     [33m<[31m[33m/[31m[33mdiv[31m[33m>[31m
+ [90m 251 |[31m   )[33m;[31m[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/DEV/fiap-04-final/frontend/src/pages/AnalysisPage.tsx[39m:248:6
+[33m  246|        </form>
+  247|  
+  248|        {/* ═══ RELATÓRIO ═══ */}
+     |        ^
+  249|        {result && <Report result={result} reportTab={reportTab} setReportTab={setReportTab} />}
+  250|      </div>[39m
+      at constructor (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:365:19)
+      at TypeScriptParserMixin.raise (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:6616:19)
+      at TypeScriptParserMixin.unexpected (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:6636:16)
+      at TypeScriptParserMixin.expect (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:6916:12)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11678:14)
+      at TypeScriptParserMixin.parseExprAtom (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at TypeScriptParserMixin.parseExprAtom (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOpBaseRightExpr (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11003:34)
+      at TypeScriptParserMixin.parseExprOpRightExpr (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10998:21)
+      at TypeScriptParserMixin.parseExprOp (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10964:27)
+      at TypeScriptParserMixin.parseExprOp (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9323:18)
+      at TypeScriptParserMixin.parseExprOp (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10970:21)
+      at TypeScriptParserMixin.parseExprOp (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9323:18)
+      at TypeScriptParserMixin.parseExprOps (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10925:17)
+      at TypeScriptParserMixin.parseMaybeConditional (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9803:20)
+      at TypeScriptParserMixin.parseExpressionBase (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10801:23)
+      at C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10797:39
+      at TypeScriptParserMixin.allowInAnd (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at TypeScriptParserMixin.parseExpression (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10797:17)
+      at TypeScriptParserMixin.jsxParseExpressionContainer (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4644:31)
+      at TypeScriptParserMixin.jsxParseElementAt (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4723:36)
+      at TypeScriptParserMixin.jsxParseElement (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11083:21)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11063:23)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9854:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10916:61)
+      at TypeScriptParserMixin.parseExprOps (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10921:23)
+      at TypeScriptParserMixin.parseMaybeConditional (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10898:23)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10848:21)
+      at C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9792:39
+      at TypeScriptParserMixin.tryParse (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:6924:20)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:9792:18)
+      at C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10817:39
+      at TypeScriptParserMixin.allowInAnd (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:12443:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:10817:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:12510:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11692:28)
+      at TypeScriptParserMixin.parseExprAtom (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11348:23)
+      at TypeScriptParserMixin.parseExprAtom (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11098:23)
+      at TypeScriptParserMixin.parseUpdate (C:\DEV\fiap-04-final\frontend\node_modules\@babel\parser\lib\index.js:11083:21)
+[2m11:15:00[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/AnalysisPage.tsx, /src/index.css[22m

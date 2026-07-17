@@ -41,11 +41,7 @@ def test_csv_without_vital_columns():
 
 
 def test_out_of_range_spo2_detected():
-    csv = (
-        "timestamp,spo2\n"
-        "2026-07-16T10:00:00Z,90\n"
-        "2026-07-16T10:05:00Z,88\n"
-    )
+    csv = "timestamp,spo2\n2026-07-16T10:00:00Z,90\n2026-07-16T10:05:00Z,88\n"
     result = analyze_vitals(csv.encode())
     spo2_findings = [f for f in result["findings"] if f.get("signal") == "spo2"]
     assert len(spo2_findings) > 0
@@ -53,11 +49,7 @@ def test_out_of_range_spo2_detected():
 
 
 def test_out_of_range_heart_rate_detected():
-    csv = (
-        "timestamp,heart_rate\n"
-        "2026-07-16T10:00:00Z,130\n"
-        "2026-07-16T10:05:00Z,135\n"
-    )
+    csv = "timestamp,heart_rate\n2026-07-16T10:00:00Z,130\n2026-07-16T10:05:00Z,135\n"
     result = analyze_vitals(csv.encode())
     hr_findings = [f for f in result["findings"] if f.get("signal") == "heart_rate"]
     assert len(hr_findings) > 0

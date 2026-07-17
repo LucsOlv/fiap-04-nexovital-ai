@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from pydantic import BaseModel, Field
 
 
@@ -9,18 +11,18 @@ class AnalyzerOutput(BaseModel):
     status: str = "ok"  # "ok" | "failed" | "missing"
     severity: str = "NORMAL"  # "NORMAL" | "ATENÇÃO" | "ALERTA"
     score: int = 0
-    findings: list[dict] = Field(default_factory=list)
-    evidence: list[dict] = Field(default_factory=list)
+    findings: list[dict[str, Any]] = Field(default_factory=list)
+    evidence: list[dict[str, Any]] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
 
 
 class AiReport(BaseModel):
     summary: str
-    correlations: list[dict] = Field(default_factory=list)
+    correlations: list[dict[str, Any]] = Field(default_factory=list)
     review_points: list[str] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
-    possible_causes: list[dict] = Field(default_factory=list)
-    possible_treatments: list[dict] = Field(default_factory=list)
+    possible_causes: list[dict[str, Any]] = Field(default_factory=list)
+    possible_treatments: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class AnalysisResponse(BaseModel):
@@ -35,7 +37,7 @@ class AnalysisResponse(BaseModel):
     vitals: AnalyzerOutput | None = None
     medications: AnalyzerOutput | None = None
 
-    correlations: list[dict] = Field(default_factory=list)
+    correlations: list[dict[str, Any]] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
     ai_report: AiReport | None = None
 

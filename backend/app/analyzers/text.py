@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 from app.analyzers.critical_terms import CRITICAL_TERMS_LOWER
 from app.state import AnalyzerResult
@@ -26,12 +27,12 @@ def analyze_text(
         )
 
     text_lower = text.lower()
-    findings: list[dict] = []
+    findings: list[dict[str, Any]] = []
     limitations: list[str] = []
     score = 0
 
     # 1. Termos críticos (regras locais, sempre disponíveis)
-    found_terms: list[dict] = []
+    found_terms: list[dict[str, Any]] = []
     for term, severity in CRITICAL_TERMS_LOWER.items():
         if term in text_lower:
             found_terms.append({"term": term, "severity": severity})
@@ -41,12 +42,14 @@ def analyze_text(
                 score += 10
 
     for ft in found_terms:
-        findings.append({
-            "type": "critical_term",
-            "term": ft["term"],
-            "severity": ft["severity"],
-            "detail": f"Termo crítico detectado: '{ft['term']}'.",
-        })
+        findings.append(
+            {
+                "type": "critical_term",
+                "term": ft["term"],
+                "severity": ft["severity"],
+                "detail": f"Termo crítico detectado: '{ft['term']}'.",
+            }
+        )
 
     # 2. Azure AI Language (se configurado)
     sentiment = "neutral"
@@ -59,28 +62,36 @@ def analyze_text(
             key_phrases = azure_result.get("key_phrases", [])
             if sentiment == "negative":
                 score += 15
-                findings.append({
-                    "type": "sentiment",
-                    "value": sentiment,
-                    "detail": "Sentimento negativo detectado no texto clínico.",
-                })
+                findings.append(
+                    {
+                        "type": "sentiment",
+                        "value": sentiment,
+                        "detail": "Sentimento negativo detectado no texto clínico.",
+                    }
+                )
             elif sentiment == "positive":
-                findings.append({
-                    "type": "sentiment",
-                    "value": sentiment,
-                    "detail": "Sentimento positivo detectado.",
-                })
+                findings.append(
+                    {
+                        "type": "sentiment",
+                        "value": sentiment,
+                        "detail": "Sentimento positivo detectado.",
+                    }
+                )
             for phrase in key_phrases:
-                findings.append({
-                    "type": "key_phrase",
-                    "value": phrase,
-                    "detail": f"Termo-chave: '{phrase}'.",
-                })
+                findings.append(
+                    {
+                        "type": "key_phrase",
+                        "value": phrase,
+                        "detail": f"Termo-chave: '{phrase}'.",
+                    }
+                )
         except Exception as exc:
             logger.warning("Azure Language failed: %s", exc)
             limitations.append(f"Azure AI Language indisponível: {exc}")
     else:
-        limitations.append("Azure AI Language não configurado — apenas termos críticos locais analisados.")
+        limitations.append(
+            "Azure AI Language não configurado — apenas termos críticos locais analisados."
+        )
 
     severity = "NORMAL"
     if score >= 40:
@@ -93,19 +104,19 @@ def analyze_text(
         severity=severity,
         score=min(100, score),
         findings=findings,
-        evidence=[{
-            "text_length": len(text),
-            "sentiment": sentiment,
-            "key_phrases": key_phrases,
-            "critical_terms_found": len(found_terms),
-        }],
+        evidence=[
+            {
+                "text_length": len(text),
+                "sentiment": sentiment,
+                "key_phrases": key_phrases,
+                "critical_terms_found": len(found_terms),
+            }
+        ],
         limitations=limitations,
     )
 
 
-def _call_azure_language(
-    text: str, key: str, endpoint: str
-) -> dict:
+def _call_azure_language(text: str, key: str, endpoint: str) -> dict[str, Any]:
     """Chama Azure AI Language para sentimento e frases-chave."""
     from azure.ai.textanalytics import TextAnalyticsClient
     from azure.core.credentials import AzureKeyCredential
@@ -118,7 +129,7 @@ def _call_azure_language(
         credential=AzureKeyCredential(key),
     )
 
-    result: dict = {"sentiment": "neutral", "key_phrases": []}
+    result: dict[str, Any] = {"sentiment": "neutral", "key_phrases": []}
 
     # Sentimento
     sentiment_response = client.analyze_sentiment(documents=[text])[0]

@@ -12,24 +12,24 @@ param environment string = 'demo'
 @description('Região Azure para deploy.')
 param location string = 'eastus2'
 
-@description('URL completa da imagem Docker do backend no ACR.')
+@description('URL completa da imagem pública do backend no GHCR.')
 param backendImage string
-
-@description('Servidor de login do ACR.')
-param acrLoginServer string
-
-@description('Usuário admin do ACR.')
-param acrUsername string
-
-@description('Senha admin do ACR.')
-@secure()
-param acrPassword string
 
 @description('URL do repositório GitHub do projeto.')
 param repoUrl string
 
 @description('Email para alerta de orçamento.')
 param notificationEmail string
+
+@description('Chave do OpenRouter.')
+@secure()
+param openRouterApiKey string
+
+@description('Modelo usado no OpenRouter.')
+param openRouterModel string = 'google/gemini-flash-1.5'
+
+@description('URL-base da API OpenRouter.')
+param openRouterBaseUrl string = 'https://openrouter.ai/api/v1'
 
 @description('Tags extras opcionais.')
 param tags object = {}
@@ -66,13 +66,13 @@ module containerApps 'modules/container-apps.bicep' = {
     backendName: backendAppName
     location: location
     backendImage: backendImage
-    acrLoginServer: acrLoginServer
-    acrUsername: acrUsername
-    acrPassword: acrPassword
     speechKey: cognitiveServices.outputs.speechKey
     speechRegion: cognitiveServices.outputs.speechRegion
     languageKey: cognitiveServices.outputs.languageKey
     languageEndpoint: cognitiveServices.outputs.languageEndpoint
+    openRouterApiKey: openRouterApiKey
+    openRouterModel: openRouterModel
+    openRouterBaseUrl: openRouterBaseUrl
     tags: defaultTags
   }
 }
@@ -97,6 +97,7 @@ module budget 'modules/budget.bicep' = {
 
 output frontendUrl string = staticWebApp.outputs.frontendUrl
 output backendUrl string = containerApps.outputs.backendUrl
+output backendImage string = backendImage
 output speechResourceName string = speechName
 output languageResourceName string = languageName
 output languageEndpoint string = cognitiveServices.outputs.languageEndpoint

@@ -5,17 +5,17 @@
     "location": {
       "value": "eastus2"
     },
-    "githubUsername": {
-      "value": "your-github-username"
+    "backendImage": {
+      "value": "ghcr.io/lucsolv/fiap-04-nexovital-ai/backend:latest"
     },
     "repoUrl": {
-      "value": "https://github.com/your-github-username/fiap-04-final"
-    },
-    "backendImageTag": {
-      "value": "latest"
+      "value": "https://github.com/LucsOlv/fiap-04-nexovital-ai"
     },
     "notificationEmail": {
-      "value": "admin@example.com"
+      "value": "lucs.oliv9@gmail.com"
+    },
+    "openRouterApiKey": {
+      "value": "SET_VIA_OPENROUTER_API_KEY"
     }
   }
 }

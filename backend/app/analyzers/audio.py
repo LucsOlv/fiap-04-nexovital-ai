@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import logging
-import os
 import subprocess
 import tempfile
 from pathlib import Path
+from typing import Any, cast
 
 from app.analyzers.critical_terms import CRITICAL_TERMS_LOWER
 from app.state import AnalyzerResult
@@ -32,7 +32,7 @@ def analyze_audio(
         )
 
     limitations: list[str] = []
-    findings: list[dict] = []
+    findings: list[dict[str, Any]] = []
     score = 0
 
     # Salvar áudio temporário
@@ -57,11 +57,13 @@ def analyze_audio(
         if azure_speech_key and azure_speech_region:
             try:
                 transcription = _transcribe_azure(normalized, azure_speech_key, azure_speech_region)
-                findings.append({
-                    "type": "transcription",
-                    "detail": f"Transcrição obtida ({len(transcription)} caracteres).",
-                    "excerpt": transcription[:500],
-                })
+                findings.append(
+                    {
+                        "type": "transcription",
+                        "detail": f"Transcrição obtida ({len(transcription)} caracteres).",
+                        "excerpt": transcription[:500],
+                    }
+                )
             except Exception as exc:
                 logger.warning("Azure Speech failed: %s", exc)
                 limitations.append(f"Azure Speech to Text falhou: {exc}")
@@ -70,34 +72,43 @@ def analyze_audio(
 
         # 2. Métricas acústicas
         acoustic = _acoustic_metrics(normalized)
-        findings.append({
-            "type": "acoustic",
-            "duration_sec": acoustic["duration_sec"],
-            "silence_ratio": acoustic["silence_ratio"],
-            "pause_count": acoustic["pause_count"],
-            "speech_rate": acoustic["speech_rate"],
-            "detail": (
-                f"Duração: {acoustic['duration_sec']:.1f}s, "
-                f"Silêncio: {acoustic['silence_ratio']:.0%}, "
-                f"Pausas: {acoustic['pause_count']}, "
-                f"Ritmo: {acoustic['speech_rate']:.1f} sílabas/s"
-            ),
-        })
+        findings.append(
+            {
+                "type": "acoustic",
+                "duration_sec": acoustic["duration_sec"],
+                "silence_ratio": acoustic["silence_ratio"],
+                "pause_count": acoustic["pause_count"],
+                "speech_rate": acoustic["speech_rate"],
+                "detail": (
+                    f"Duração: {acoustic['duration_sec']:.1f}s, "
+                    f"Silêncio: {acoustic['silence_ratio']:.0%}, "
+                    f"Pausas: {acoustic['pause_count']}, "
+                    f"Ritmo: {acoustic['speech_rate']:.1f} sílabas/s"
+                ),
+            }
+        )
 
         # Heurísticas de fadiga/dificuldade
         if acoustic["duration_sec"] > 30 and acoustic["speech_rate"] < 2.0:
-            findings.append({
-                "type": "speech_anomaly",
-                "detail": "Ritmo de fala reduzido — possível cansaço ou dificuldade respiratória.",
-                "severity": "ATENÇÃO",
-            })
+            findings.append(
+                {
+                    "type": "speech_anomaly",
+                    "detail": (
+                        "Ritmo de fala reduzido — possível cansaço ou "
+                        "dificuldade respiratória."
+                    ),
+                    "severity": "ATENÇÃO",
+                }
+            )
             score += 15
         if acoustic["silence_ratio"] > 0.3:
-            findings.append({
-                "type": "speech_anomaly",
-                "detail": "Alta proporção de silêncio — pausas frequentes.",
-                "severity": "ATENÇÃO",
-            })
+            findings.append(
+                {
+                    "type": "speech_anomaly",
+                    "detail": "Alta proporção de silêncio — pausas frequentes.",
+                    "severity": "ATENÇÃO",
+                }
+            )
             score += 10
 
         # 3. Termos críticos na transcrição
@@ -106,12 +117,14 @@ def analyze_audio(
             for term, sev in CRITICAL_TERMS_LOWER.items():
                 if term in text_lower:
                     score += 20 if sev == "ALERTA" else 10
-                    findings.append({
-                        "type": "critical_term_audio",
-                        "term": term,
-                        "severity": sev,
-                        "detail": f"Termo crítico na fala: '{term}'.",
-                    })
+                    findings.append(
+                        {
+                            "type": "critical_term_audio",
+                            "term": term,
+                            "severity": sev,
+                            "detail": f"Termo crítico na fala: '{term}'.",
+                        }
+                    )
 
         severity = "NORMAL"
         if score >= 40:
@@ -124,11 +137,13 @@ def analyze_audio(
             severity=severity,
             score=min(100, score),
             findings=findings,
-            evidence=[{
-                "transcription": transcription,
-                "acoustic": acoustic,
-                "audio_size_bytes": len(audio_bytes),
-            }],
+            evidence=[
+                {
+                    "transcription": transcription,
+                    "acoustic": acoustic,
+                    "audio_size_bytes": len(audio_bytes),
+                }
+            ],
             limitations=limitations,
         )
     finally:
@@ -142,8 +157,16 @@ def _normalize_audio(raw_bytes: bytes, output_path: Path) -> Path:
     try:
         subprocess.run(
             [
-                "ffmpeg", "-y", "-i", str(input_path),
-                "-ar", "16000", "-ac", "1", "-sample_fmt", "s16",
+                "ffmpeg",
+                "-y",
+                "-i",
+                str(input_path),
+                "-ar",
+                "16000",
+                "-ac",
+                "1",
+                "-sample_fmt",
+                "s16",
                 str(output_path),
             ],
             capture_output=True,
@@ -162,40 +185,50 @@ def _transcribe_azure(wav_path: Path, key: str, region: str) -> str:
     speech_config = speechsdk.SpeechConfig(subscription=key, region=region)
     speech_config.speech_recognition_language = "pt-BR"
     audio_config = speechsdk.audio.AudioConfig(filename=str(wav_path))
-    recognizer = speechsdk.SpeechRecognizer(
-        speech_config=speech_config, audio_config=audio_config
-    )
+    recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config, audio_config=audio_config)
 
     result = recognizer.recognize_once()
     if result.reason == speechsdk.ResultReason.RecognizedSpeech:
-        return result.text
+        return cast(str, result.text)
     elif result.reason == speechsdk.ResultReason.NoMatch:
         return "[Fala não reconhecida]"
     else:
         raise RuntimeError(f"Speech recognition failed: {result.reason}")
 
 
-def _acoustic_metrics(wav_path: Path) -> dict:
+def _acoustic_metrics(wav_path: Path) -> dict[str, Any]:
     """Métricas acústicas simples usando ffprobe."""
     result = subprocess.run(
         [
-            "ffprobe", "-v", "error",
-            "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1",
+            "ffprobe",
+            "-v",
+            "error",
+            "-show_entries",
+            "format=duration",
+            "-of",
+            "default=noprint_wrappers=1:nokey=1",
             str(wav_path),
         ],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
     )
     duration = float(result.stdout.strip())
 
     # Detecta silêncio com ffmpeg silencedetect
     silence_result = subprocess.run(
         [
-            "ffmpeg", "-i", str(wav_path),
-            "-af", "silencedetect=noise=-30dB:d=0.5",
-            "-f", "null", "-",
+            "ffmpeg",
+            "-i",
+            str(wav_path),
+            "-af",
+            "silencedetect=noise=-30dB:d=0.5",
+            "-f",
+            "null",
+            "-",
         ],
-        capture_output=True, text=True,
+        capture_output=True,
+        text=True,
     )
 
     silence_duration = 0.0
@@ -215,10 +248,17 @@ def _acoustic_metrics(wav_path: Path) -> dict:
     # Contagem de energia (RMS) como proxy
     rms_result = subprocess.run(
         [
-            "ffmpeg", "-i", str(wav_path),
-            "-af", f"volumedetect", "-f", "null", "-",
+            "ffmpeg",
+            "-i",
+            str(wav_path),
+            "-af",
+            "volumedetect",
+            "-f",
+            "null",
+            "-",
         ],
-        capture_output=True, text=True,
+        capture_output=True,
+        text=True,
     )
     mean_volume = -30.0
     for line in rms_result.stderr.splitlines():

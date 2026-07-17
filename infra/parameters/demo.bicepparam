@@ -1,7 +1,7 @@
 using '../main.bicep'
 
 param location = 'eastus2'
-param githubUsername = 'your-github-username'
-param repoUrl = 'https://github.com/your-github-username/fiap-04-final'
-param backendImageTag = 'latest'
-param notificationEmail = 'admin@example.com'
+param backendImage = 'ghcr.io/lucsolv/fiap-04-nexovital-ai/backend:latest'
+param repoUrl = 'https://github.com/LucsOlv/fiap-04-nexovital-ai'
+param notificationEmail = 'lucs.oliv9@gmail.com'
+param openRouterApiKey = readEnvironmentVariable('OPENROUTER_API_KEY')

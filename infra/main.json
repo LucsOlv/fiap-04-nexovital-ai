@@ -6,7 +6,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.44.1.10279",
-      "templateHash": "8122683663111360469"
+      "templateHash": "12231447277644721054"
     }
   },
   "parameters": {
@@ -37,25 +37,7 @@
     "backendImage": {
       "type": "string",
       "metadata": {
-        "description": "URL completa da imagem Docker do backend no ACR."
-      }
-    },
-    "acrLoginServer": {
-      "type": "string",
-      "metadata": {
-        "description": "Servidor de login do ACR."
-      }
-    },
-    "acrUsername": {
-      "type": "string",
-      "metadata": {
-        "description": "Usuário admin do ACR."
-      }
-    },
-    "acrPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Senha admin do ACR."
+        "description": "URL completa da imagem pública do backend no GHCR."
       }
     },
     "repoUrl": {
@@ -68,6 +50,26 @@
       "type": "string",
       "metadata": {
         "description": "Email para alerta de orçamento."
+      }
+    },
+    "openRouterApiKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Chave do OpenRouter."
+      }
+    },
+    "openRouterModel": {
+      "type": "string",
+      "defaultValue": "google/gemini-flash-1.5",
+      "metadata": {
+        "description": "Modelo usado no OpenRouter."
+      }
+    },
+    "openRouterBaseUrl": {
+      "type": "string",
+      "defaultValue": "https://openrouter.ai/api/v1",
+      "metadata": {
+        "description": "URL-base da API OpenRouter."
       }
     },
     "tags": {
@@ -223,15 +225,6 @@
           "backendImage": {
             "value": "[parameters('backendImage')]"
           },
-          "acrLoginServer": {
-            "value": "[parameters('acrLoginServer')]"
-          },
-          "acrUsername": {
-            "value": "[parameters('acrUsername')]"
-          },
-          "acrPassword": {
-            "value": "[parameters('acrPassword')]"
-          },
           "speechKey": {
             "value": "[listOutputsWithSecureValues('cognitiveServices', '2025-04-01').speechKey]"
           },
@@ -244,6 +237,15 @@
           "languageEndpoint": {
             "value": "[reference('cognitiveServices').outputs.languageEndpoint.value]"
           },
+          "openRouterApiKey": {
+            "value": "[parameters('openRouterApiKey')]"
+          },
+          "openRouterModel": {
+            "value": "[parameters('openRouterModel')]"
+          },
+          "openRouterBaseUrl": {
+            "value": "[parameters('openRouterBaseUrl')]"
+          },
           "tags": {
             "value": "[variables('defaultTags')]"
           }
@@ -255,7 +257,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.44.1.10279",
-              "templateHash": "3737661554621209"
+              "templateHash": "5660961245328808806"
             }
           },
           "parameters": {
@@ -280,25 +282,7 @@
             "backendImage": {
               "type": "string",
               "metadata": {
-                "description": "URL completa da imagem ACR."
-              }
-            },
-            "acrLoginServer": {
-              "type": "string",
-              "metadata": {
-                "description": "Servidor de login do ACR."
-              }
-            },
-            "acrUsername": {
-              "type": "string",
-              "metadata": {
-                "description": "Usuário admin do ACR."
-              }
-            },
-            "acrPassword": {
-              "type": "securestring",
-              "metadata": {
-                "description": "Senha admin do ACR."
+                "description": "URL completa da imagem pública no GHCR."
               }
             },
             "speechKey": {
@@ -323,6 +307,24 @@
               "type": "string",
               "metadata": {
                 "description": "Endpoint do Azure AI Language."
+              }
+            },
+            "openRouterApiKey": {
+              "type": "securestring",
+              "metadata": {
+                "description": "Chave do OpenRouter."
+              }
+            },
+            "openRouterModel": {
+              "type": "string",
+              "metadata": {
+                "description": "Modelo usado no OpenRouter."
+              }
+            },
+            "openRouterBaseUrl": {
+              "type": "string",
+              "metadata": {
+                "description": "URL-base da API OpenRouter."
               }
             },
             "tags": {
@@ -362,23 +364,16 @@
                   },
                   "secrets": [
                     {
-                      "name": "registry-password",
-                      "value": "[parameters('acrPassword')]"
-                    },
-                    {
                       "name": "azure-speech-key",
                       "value": "[parameters('speechKey')]"
                     },
                     {
                       "name": "azure-language-key",
                       "value": "[parameters('languageKey')]"
-                    }
-                  ],
-                  "registries": [
+                    },
                     {
-                      "server": "[parameters('acrLoginServer')]",
-                      "username": "[parameters('acrUsername')]",
-                      "passwordSecretRef": "registry-password"
+                      "name": "openrouter-api-key",
+                      "value": "[parameters('openRouterApiKey')]"
                     }
                   ]
                 },
@@ -415,6 +410,18 @@
                         {
                           "name": "AZURE_LANGUAGE_ENDPOINT",
                           "value": "[parameters('languageEndpoint')]"
+                        },
+                        {
+                          "name": "OPENROUTER_API_KEY",
+                          "secretRef": "openrouter-api-key"
+                        },
+                        {
+                          "name": "OPENROUTER_MODEL",
+                          "value": "[parameters('openRouterModel')]"
+                        },
+                        {
+                          "name": "OPENROUTER_BASE_URL",
+                          "value": "[parameters('openRouterBaseUrl')]"
                         }
                       ],
                       "resources": {
@@ -648,6 +655,10 @@
     "backendUrl": {
       "type": "string",
       "value": "[reference('containerApps').outputs.backendUrl.value]"
+    },
+    "backendImage": {
+      "type": "string",
+      "value": "[parameters('backendImage')]"
     },
     "speechResourceName": {
       "type": "string",

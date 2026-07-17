@@ -9,6 +9,11 @@ extend-exclude = ["frontend", ".venv"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "W"]
 
+[tool.ruff.lint.per-file-ignores]
+# Textos clínicos explicativos ficam legíveis como frases completas.
+"backend/app/analyzers/video.py" = ["E501"]
+"backend/app/services/openrouter_client.py" = ["E501"]
+
 [tool.mypy]
 python_version = "3.12"
 strict = true
